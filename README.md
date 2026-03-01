@@ -221,13 +221,13 @@ try {
 }
 ```
 
-| Error Class              | HTTP Status | Description                 |
-| ------------------------ | ----------- | --------------------------- |
-| `AuthenticationError`    | 401         | Invalid or missing API key  |
-| `InsufficientCreditsError` | 402       | Not enough credits          |
-| `ValidationError`        | 422         | Invalid request parameters  |
-| `RateLimitError`         | 429         | Too many requests           |
-| `DataLegionError`        | any         | Base class for all errors   |
+| Error Class                | HTTP Status | Description                |
+| -------------------------- | ----------- | -------------------------- |
+| `AuthenticationError`      | 401         | Invalid or missing API key |
+| `InsufficientCreditsError` | 402         | Not enough credits         |
+| `ValidationError`          | 422         | Invalid request parameters |
+| `RateLimitError`           | 429         | Too many requests          |
+| `DataLegionError`          | any         | Base class for all errors  |
 
 Each error exposes `statusCode`, `error`, `message`, and `details` properties.
 

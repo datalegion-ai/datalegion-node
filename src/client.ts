@@ -52,7 +52,11 @@ export class PersonResource {
   async enrich(params: PersonEnrichParams & { multiple_results?: false }): Promise<PersonResponse>;
   async enrich(params: PersonEnrichParams): Promise<PersonResponse | PersonMatchesResponse>;
   async enrich(params: PersonEnrichParams): Promise<PersonResponse | PersonMatchesResponse> {
-    return this._client._request<PersonResponse | PersonMatchesResponse>('POST', '/person/enrich', params);
+    const data = await this._client._request<PersonMatchesResponse>('POST', '/person/enrich', params);
+    if (params.multiple_results) {
+      return data;
+    }
+    return data.matches[0].person;
   }
 
   /** Search for people using a SQL query. */
@@ -86,7 +90,11 @@ export class CompanyResource {
   async enrich(params: CompanyEnrichParams & { multiple_results?: false }): Promise<CompanyResponse>;
   async enrich(params: CompanyEnrichParams): Promise<CompanyResponse | CompanyMatchesResponse>;
   async enrich(params: CompanyEnrichParams): Promise<CompanyResponse | CompanyMatchesResponse> {
-    return this._client._request<CompanyResponse | CompanyMatchesResponse>('POST', '/company/enrich', params);
+    const data = await this._client._request<CompanyMatchesResponse>('POST', '/company/enrich', params);
+    if (params.multiple_results) {
+      return data;
+    }
+    return data.matches[0].company;
   }
 
   /** Search for companies using a SQL query. */

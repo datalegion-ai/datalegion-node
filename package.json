@@ -11,7 +11,8 @@
     "build": "bun run tsc",
     "lint": "bun run eslint src/",
     "lint:fix": "bun run eslint src/ --fix",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build",
+    "test": "bun test"
   },
   "author": "Data Legion <engineering@datalegion.ai>",
   "license": "MIT",
