@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import { DataLegion } from '../src/index';
 import { AuthenticationError, DataLegionError } from '../src/error';
 

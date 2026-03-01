@@ -12,21 +12,22 @@
     "lint": "bun run eslint src/",
     "lint:fix": "bun run eslint src/ --fix",
     "prepublishOnly": "bun run build",
-    "test": "bun test"
+    "test": "vitest run"
   },
   "author": "Data Legion <engineering@datalegion.ai>",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.0.0",
+    "@eslint/js": "^9.39.3",
     "@types/node": "^25.3.3",
-    "eslint": "^9.0.0",
-    "eslint-plugin-import": "^2.31.0",
+    "eslint": "^9.39.3",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-sort-keys-fix": "^1.1.2",
-    "eslint-plugin-unused-imports": "^4.0.0",
-    "typescript": "^5.0.0",
-    "typescript-eslint": "^8.0.0"
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^3.2.4"
   }
 }
