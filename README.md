@@ -246,4 +246,4 @@ const client = new DataLegion({
 
 ## Documentation
 
-Full API documentation is available at [docs.datalegion.ai](https://www.datalegion.ai/docs).
+Full API documentation is available at [https://www.datalegion.ai/docs](https://www.datalegion.ai/docs).
