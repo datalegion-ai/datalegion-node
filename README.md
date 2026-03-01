@@ -1,6 +1,6 @@
 # Data Legion Node.js SDK
 
-TypeScript client for the [Data Legion API](https://docs.datalegion.ai). Provides typed access to person enrichment, company enrichment, search, discovery, and utility endpoints.
+TypeScript client for the [Data Legion API](https://www.datalegion.ai/docs). Provides typed access to person enrichment, company enrichment, search, discovery, and utility endpoints.
 
 - Zero external dependencies -- uses built-in `fetch` (Node.js 18+)
 - Full TypeScript type definitions for all request and response objects
@@ -246,8 +246,4 @@ const client = new DataLegion({
 
 ## Documentation
 
-Full API documentation is available at [docs.datalegion.ai](https://docs.datalegion.ai).
-
-## License
-
-MIT
+Full API documentation is available at [docs.datalegion.ai](https://www.datalegion.ai/docs).
