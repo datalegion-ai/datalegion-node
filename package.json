@@ -1,0 +1,33 @@
+{
+  "name": "datalegion",
+  "version": "0.1.0",
+  "description": "TypeScript client for the Data Legion API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bun run tsc",
+    "lint": "bun run eslint src/",
+    "lint:fix": "bun run eslint src/ --fix",
+    "prepublishOnly": "bun run build",
+    "test": "vitest run"
+  },
+  "author": "Data Legion <engineering@datalegion.ai>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.3",
+    "@types/node": "^25.3.3",
+    "eslint": "^9.39.3",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^3.2.4"
+  }
+}
