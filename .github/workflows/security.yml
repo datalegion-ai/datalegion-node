@@ -1,0 +1,60 @@
+name: Security
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Check Changes
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    if: github.event.pull_request.draft != true
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      should_run: ${{ steps.filter.outputs.src }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            src:
+              - 'src/**'
+              - 'package.json'
+              - 'bun.lock'
+              - '.github/workflows/**'
+
+  security:
+    name: Security Scan
+    needs: changes
+    if: needs.changes.outputs.should_run == 'true'
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run osv-scanner
+        uses: google/osv-scanner-action/osv-scanner-action@v2.0.3
+        with:
+          scan-args: |-
+            --lockfile=bun.lock
