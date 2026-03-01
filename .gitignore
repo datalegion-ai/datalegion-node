@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+
+# Generated files in src/
+src/*.js
+src/*.d.ts
+src/*.js.map
