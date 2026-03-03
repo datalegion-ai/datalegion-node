@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .env
+.pytest_cache/
 
 # Generated files in src/
 src/*.js
