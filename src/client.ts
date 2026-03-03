@@ -1,5 +1,5 @@
-import { AuthenticationError, DataLegionError, InsufficientCreditsError, RateLimitError, ValidationError } from './error';
-import type { CleanParams, ClientOptions, CompanyEnrichParams, CompanyMatchesResponse, CompanyResponse, DiscoverParams, EmailHashResponse, ErrorResponse, FieldCleanResponse, HashEmailParams, HealthResponse, PersonEnrichParams, PersonMatchesResponse, PersonResponse, SearchParams, ValidateParams, ValidationResponse } from './types';
+import { AuthenticationError, DataLegionError, InsufficientCreditsError, RateLimitError, ValidationError } from './error.js';
+import type { CleanParams, ClientOptions, CompanyEnrichParams, CompanyMatchesResponse, CompanyResponse, DiscoverParams, EmailHashResponse, ErrorResponse, FieldCleanResponse, HashEmailParams, HealthResponse, PersonEnrichParams, PersonMatchesResponse, PersonResponse, SearchParams, ValidateParams, ValidationResponse } from './types.js';
 
 // ---------------------------------------------------------------------------
 // Constants
