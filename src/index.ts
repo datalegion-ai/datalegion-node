@@ -1,7 +1,7 @@
-import { DataLegion } from './client';
+import { DataLegion } from './client.js';
 
-export { CompanyResource, DataLegion, PersonResource, UtilityResource } from './client';
-export { AuthenticationError, DataLegionError, InsufficientCreditsError, RateLimitError, ValidationError } from './error';
+export { CompanyResource, DataLegion, PersonResource, UtilityResource } from './client.js';
+export { AuthenticationError, DataLegionError, InsufficientCreditsError, RateLimitError, ValidationError } from './error.js';
 export type {
   // Client options
   ClientOptions,
@@ -57,7 +57,7 @@ export type {
   ValidationResponse,
   ValidationSuggestion,
   ValidationWarning,
-} from './types';
+} from './types.js';
 
 // Default export for convenient usage:
 //   import DataLegion from 'datalegion';

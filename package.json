@@ -2,18 +2,49 @@
   "name": "datalegion",
   "version": "0.1.0",
   "description": "TypeScript client for the Data Legion API",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "bun run tsc",
+    "build": "bun run tsc && bun run tsc -p tsconfig.esm.json && echo '{\"type\":\"module\"}' > dist/esm/package.json",
     "lint": "bun run eslint src/",
     "lint:fix": "bun run eslint src/ --fix",
     "prepublishOnly": "bun run build",
     "test": "vitest run"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/datalegion-ai/datalegion-node.git"
+  },
+  "homepage": "https://www.datalegion.ai/docs",
+  "bugs": {
+    "url": "https://github.com/datalegion-ai/datalegion-node/issues"
+  },
+  "keywords": [
+    "datalegion",
+    "api",
+    "sdk",
+    "typescript",
+    "person-enrichment",
+    "company-enrichment",
+    "data-enrichment",
+    "b2b",
+    "contact-data"
+  ],
   "author": "Data Legion <engineering@datalegion.ai>",
   "license": "MIT",
   "engines": {
