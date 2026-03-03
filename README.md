@@ -1,4 +1,18 @@
-# Data Legion Node.js SDK
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/logo-light.svg">
+    <source media="(prefers-color-scheme: light)" srcset=".github/logo.svg">
+    <img alt="Data Legion" src=".github/logo.svg" width="260">
+  </picture>
+</p>
+
+<h1 align="center">Data Legion Node.js SDK</h1>
+
+<p align="center">
+  <a href="https://github.com/datalegion-ai/datalegion-node/actions/workflows/test.yml"><img src="https://github.com/datalegion-ai/datalegion-node/actions/workflows/test.yml/badge.svg" alt="Tests"></a>&nbsp;&nbsp;
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>&nbsp;&nbsp;
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg" alt="Node.js"></a>
+</p>
 
 TypeScript client for the [Data Legion API](https://www.datalegion.ai/docs). Provides typed access to person enrichment, company enrichment, search, discovery, and utility endpoints.
 
@@ -196,9 +210,17 @@ After each request, the client exposes metadata from response headers:
 ```typescript
 await client.person.enrich({ email: 'john@example.com' });
 
-console.log(client.lastRequestId);       // unique request ID
-console.log(client.lastCreditsUsed);      // credits consumed
-console.log(client.lastCreditsRemaining); // credits remaining
+console.log(client.requestId);           // unique request ID
+console.log(client.creditsUsed);          // credits consumed
+console.log(client.creditsRemaining);     // credits remaining
+console.log(client.contractId);           // contract ID
+console.log(client.rateLimitLimit);       // requests quota in current window
+console.log(client.rateLimitRemaining);   // remaining requests in current window
+console.log(client.rateLimitReset);       // unix timestamp when window resets
+console.log(client.rateLimitPolicy);      // rate limit policy (e.g. "100/min")
+console.log(client.retryAfter);           // seconds to wait (on 429 responses)
+console.log(client.generatedQuery);       // SQL from discover endpoints
+console.log(client.correlationId);        // echoed Correlation-ID
 ```
 
 ## Error Handling

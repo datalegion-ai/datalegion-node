@@ -184,13 +184,13 @@ describe('Error handling', () => {
 describe('Response headers', () => {
   const client = hasApiKey ? new DataLegion({ apiKey: API_KEY }) : (null as unknown as DataLegion);
 
-  test.skipIf(!hasApiKey)('lastRequestId is set after a request', async () => {
-    expect(client.lastRequestId).toBeNull();
+  test.skipIf(!hasApiKey)('requestId is set after a request', async () => {
+    expect(client.requestId).toBeNull();
 
     await client.utility.validate({ email: 'jon@datalegion.ai' });
 
-    expect(client.lastRequestId).not.toBeNull();
-    expect(typeof client.lastRequestId).toBe('string');
-    expect(client.lastRequestId!.length).toBeGreaterThan(0);
+    expect(client.requestId).not.toBeNull();
+    expect(typeof client.requestId).toBe('string');
+    expect(client.requestId!.length).toBeGreaterThan(0);
   });
 });
