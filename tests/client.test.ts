@@ -83,6 +83,22 @@ describe('Person', () => {
       expect(typeof match.person.legion_id).toBe('string');
     }
   }, 30_000);
+
+  test.skipIf(!hasApiKey)('bulkEnrich returns results array', async () => {
+    const response = await client.person.bulkEnrich({
+      items: [
+        { social_url: LINKEDIN_URL },
+        { email: 'jon@datalegion.ai' },
+      ],
+    });
+
+    expect(response).toBeDefined();
+    expect(Array.isArray(response.results)).toBe(true);
+    expect(response.results.length).toBe(2);
+    for (const result of response.results) {
+      expect('matches' in result || 'error' in result).toBe(true);
+    }
+  }, 30_000);
 });
 
 // ---------------------------------------------------------------------------
@@ -115,6 +131,22 @@ describe.skip('Company', () => {
     expect(response).toBeDefined();
     expect(Array.isArray(response.matches)).toBe(true);
   });
+
+  test.skipIf(!hasApiKey)('bulkEnrich returns results array', async () => {
+    const response = await client.company.bulkEnrich({
+      items: [
+        { domain: 'google.com' },
+        { domain: 'datalegion.ai' },
+      ],
+    });
+
+    expect(response).toBeDefined();
+    expect(Array.isArray(response.results)).toBe(true);
+    expect(response.results.length).toBe(2);
+    for (const result of response.results) {
+      expect('matches' in result || 'error' in result).toBe(true);
+    }
+  }, 30_000);
 });
 
 // ---------------------------------------------------------------------------
