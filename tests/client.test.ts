@@ -55,7 +55,7 @@ describe('Person', () => {
   test.skipIf(!hasApiKey)('search returns matches', async () => {
     const response = await client.person.search({
       query: "SELECT * FROM people WHERE job_title ILIKE '%engineer%' AND company_name ILIKE '%google%'",
-      size: 1,
+      limit: 1,
     });
 
     expect(response).toBeDefined();
@@ -71,7 +71,7 @@ describe('Person', () => {
   test.skipIf(!hasApiKey)('discover returns matches', async () => {
     const response = await client.person.discover({
       query: 'find software engineers at google',
-      size: 1,
+      limit: 1,
     });
 
     expect(response).toBeDefined();
@@ -101,7 +101,7 @@ describe.skip('Company', () => {
   test.skipIf(!hasApiKey)('search returns matches', async () => {
     const response = await client.company.search({
       query: "SELECT * FROM companies WHERE name ILIKE '%google%'",
-      size: 1,
+      limit: 1,
     });
     expect(response).toBeDefined();
     expect(Array.isArray(response.matches)).toBe(true);
@@ -110,7 +110,7 @@ describe.skip('Company', () => {
   test.skipIf(!hasApiKey)('discover returns matches', async () => {
     const response = await client.company.discover({
       query: 'find tech companies',
-      size: 1,
+      limit: 1,
     });
     expect(response).toBeDefined();
     expect(Array.isArray(response.matches)).toBe(true);
