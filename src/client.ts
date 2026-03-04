@@ -1,5 +1,5 @@
 import { AuthenticationError, DataLegionError, InsufficientCreditsError, RateLimitError, ValidationError } from './error.js';
-import type { CleanParams, ClientOptions, CompanyEnrichParams, CompanyMatchesResponse, CompanyResponse, DiscoverParams, EmailHashResponse, ErrorResponse, FieldCleanResponse, HashEmailParams, HealthResponse, PersonEnrichParams, PersonMatchesResponse, PersonResponse, SearchParams, ValidateParams, ValidationResponse } from './types.js';
+import type { BulkCompanyEnrichResponse, BulkPersonEnrichResponse, CleanParams, ClientOptions, CompanyBulkEnrichParams, CompanyEnrichParams, CompanyMatchesResponse, CompanyResponse, DiscoverParams, EmailHashResponse, ErrorResponse, FieldCleanResponse, HashEmailParams, HealthResponse, PersonBulkEnrichParams, PersonEnrichParams, PersonMatchesResponse, PersonResponse, SearchParams, ValidateParams, ValidationResponse } from './types.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -68,6 +68,11 @@ export class PersonResource {
   async discover(params: DiscoverParams): Promise<PersonMatchesResponse> {
     return this._client._request<PersonMatchesResponse>('POST', '/person/discover', params);
   }
+
+  /** Enrich multiple people in a single request (1-100 items). */
+  async bulkEnrich(params: PersonBulkEnrichParams): Promise<BulkPersonEnrichResponse> {
+    return this._client._request<BulkPersonEnrichResponse>('POST', '/person/enrich/bulk', params);
+  }
 }
 
 /** Company-related API methods. */
@@ -105,6 +110,11 @@ export class CompanyResource {
   /** Discover companies using a natural language query. */
   async discover(params: DiscoverParams): Promise<CompanyMatchesResponse> {
     return this._client._request<CompanyMatchesResponse>('POST', '/company/discover', params);
+  }
+
+  /** Enrich multiple companies in a single request (1-100 items). */
+  async bulkEnrich(params: CompanyBulkEnrichParams): Promise<BulkCompanyEnrichResponse> {
+    return this._client._request<BulkCompanyEnrichResponse>('POST', '/company/enrich/bulk', params);
   }
 }
 

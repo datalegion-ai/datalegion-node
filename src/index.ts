@@ -11,6 +11,7 @@ export type {
 
   // Request parameter types
   CleanParams,
+  CompanyBulkEnrichParams,
   CompanyDomain,
 
   // Company response types
@@ -41,6 +42,7 @@ export type {
   Language,
   Location,
   MatchMetadata,
+  PersonBulkEnrichParams,
   PersonEnrichParams,
   PersonMatch,
   PersonMatchesResponse,
@@ -57,6 +59,12 @@ export type {
   ValidationResponse,
   ValidationSuggestion,
   ValidationWarning,
+
+  // Bulk response types
+  BulkCompanyEnrichResponse,
+  BulkCompanyItemResult,
+  BulkPersonEnrichResponse,
+  BulkPersonItemResult,
 } from './types.js';
 
 // Default export for convenient usage:

@@ -56,7 +56,7 @@ Return multiple matches:
 const results = await client.person.enrich({
   email: 'john@example.com',
   multiple_results: true,
-  limit: 5,
+  limit: 2,
 });
 
 for (const match of results.matches) {
@@ -71,7 +71,7 @@ Search for people using a SQL query.
 ```typescript
 const results = await client.person.search({
   query: "SELECT * FROM people WHERE company_name ILIKE '%google%'",
-  size: 10,
+  limit: 10,
 });
 
 console.log(`Found ${results.total} people`);
@@ -87,7 +87,7 @@ Search for people using natural language.
 ```typescript
 const results = await client.person.discover({
   query: 'engineers in San Francisco who worked at Google',
-  size: 10,
+  limit: 10,
 });
 
 for (const match of results.matches) {
@@ -126,7 +126,7 @@ Search for companies using a SQL query.
 ```typescript
 const results = await client.company.search({
   query: "SELECT * FROM companies WHERE industry = 'software development'",
-  size: 10,
+  limit: 10,
 });
 
 for (const match of results.matches) {
@@ -141,7 +141,7 @@ Search for companies using natural language.
 ```typescript
 const results = await client.company.discover({
   query: 'AI companies with more than 100 employees',
-  size: 10,
+  limit: 10,
 });
 
 for (const match of results.matches) {

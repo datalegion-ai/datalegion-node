@@ -326,6 +326,19 @@ export interface PersonMatchesResponse {
   total: number;
 }
 
+/** A single result from a bulk person enrichment request. */
+export interface BulkPersonItemResult {
+  matches?: PersonMatch[] | null;
+  total?: number | null;
+  error?: string | null;
+  metadata?: Record<string, string | number | boolean> | null;
+}
+
+/** Response from a bulk person enrichment request. */
+export interface BulkPersonEnrichResponse {
+  results: BulkPersonItemResult[];
+}
+
 /** A single company match with optional match metadata. */
 export interface CompanyMatch {
   company: CompanyResponse;
@@ -336,6 +349,19 @@ export interface CompanyMatch {
 export interface CompanyMatchesResponse {
   matches: CompanyMatch[];
   total: number;
+}
+
+/** A single result from a bulk company enrichment request. */
+export interface BulkCompanyItemResult {
+  matches?: CompanyMatch[] | null;
+  total?: number | null;
+  error?: string | null;
+  metadata?: Record<string, string | number | boolean> | null;
+}
+
+/** Response from a bulk company enrichment request. */
+export interface BulkCompanyEnrichResponse {
+  results: BulkCompanyItemResult[];
 }
 
 // ---------------------------------------------------------------------------
@@ -420,14 +446,14 @@ export interface HealthResponse {
 interface EnrichResponseOptions {
   /** If true, return multiple matches sorted by confidence. */
   multiple_results?: boolean;
-  /** Maximum number of results when `multiple_results` is true (1-10, default 5). */
+  /** Maximum number of results when `multiple_results` is true (1-10, default 2). */
   limit?: number;
   /** Minimum match confidence level: `'high'`, `'moderate'`, or `'low'`. */
   min_confidence?: string;
   /** If true, format text fields in title case. */
   titlecase?: boolean;
   /** Comma-separated list of fields that must be present in response. */
-  required?: string;
+  required_fields?: string;
   /** Comma-separated list of fields to include in response. */
   include_fields?: string;
   /** Comma-separated list of fields to exclude from response. */
@@ -495,7 +521,7 @@ export interface SearchParams extends SearchResponseOptions {
   /** SQL query to execute. */
   query: string;
   /** Maximum number of results (1-100). */
-  size: number;
+  limit: number;
 }
 
 /** Parameters for `client.person.discover()` and `client.company.discover()`. */
@@ -503,7 +529,39 @@ export interface DiscoverParams extends SearchResponseOptions {
   /** Natural language search query. */
   query: string;
   /** Maximum number of results (1-100). */
-  size: number;
+  limit: number;
+}
+
+/** Shared top-level defaults for bulk enrichment requests. */
+interface BulkEnrichDefaults {
+  /** If true, return multiple matches sorted by confidence. */
+  multiple_results?: boolean;
+  /** Maximum number of results when `multiple_results` is true (1-10, default 2). */
+  limit?: number;
+  /** Minimum match confidence level: `'high'`, `'moderate'`, or `'low'`. */
+  min_confidence?: string;
+  /** If true, format text fields in title case. */
+  titlecase?: boolean;
+  /** Comma-separated list of fields that must be present in response. */
+  required_fields?: string;
+  /** Comma-separated list of fields to include in response. */
+  include_fields?: string;
+  /** Comma-separated list of fields to exclude from response. */
+  exclude_fields?: string;
+  /** If true, pretty-print JSON response. */
+  pretty_print?: boolean;
+}
+
+/** Parameters for `client.person.bulkEnrich()`. */
+export interface PersonBulkEnrichParams extends BulkEnrichDefaults {
+  /** List of enrichment items (1-100). Each item has identifier fields plus optional `metadata`. */
+  items: Record<string, unknown>[];
+}
+
+/** Parameters for `client.company.bulkEnrich()`. */
+export interface CompanyBulkEnrichParams extends BulkEnrichDefaults {
+  /** List of enrichment items (1-100). Each item has identifier fields plus optional `metadata`. */
+  items: Record<string, unknown>[];
 }
 
 /** Parameters for `client.utility.clean()`. */

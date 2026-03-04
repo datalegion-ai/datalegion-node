@@ -55,7 +55,7 @@ describe('Person', () => {
   test.skipIf(!hasApiKey)('search returns matches', async () => {
     const response = await client.person.search({
       query: "SELECT * FROM people WHERE job_title ILIKE '%engineer%' AND company_name ILIKE '%google%'",
-      size: 1,
+      limit: 1,
     });
 
     expect(response).toBeDefined();
@@ -71,7 +71,7 @@ describe('Person', () => {
   test.skipIf(!hasApiKey)('discover returns matches', async () => {
     const response = await client.person.discover({
       query: 'find software engineers at google',
-      size: 1,
+      limit: 1,
     });
 
     expect(response).toBeDefined();
@@ -81,6 +81,22 @@ describe('Person', () => {
       const match = response.matches[0];
       expect(match.person).toBeDefined();
       expect(typeof match.person.legion_id).toBe('string');
+    }
+  }, 30_000);
+
+  test.skipIf(!hasApiKey)('bulkEnrich returns results array', async () => {
+    const response = await client.person.bulkEnrich({
+      items: [
+        { social_url: LINKEDIN_URL },
+        { email: 'jon@datalegion.ai' },
+      ],
+    });
+
+    expect(response).toBeDefined();
+    expect(Array.isArray(response.results)).toBe(true);
+    expect(response.results.length).toBe(2);
+    for (const result of response.results) {
+      expect('matches' in result || 'error' in result).toBe(true);
     }
   }, 30_000);
 });
@@ -101,7 +117,7 @@ describe.skip('Company', () => {
   test.skipIf(!hasApiKey)('search returns matches', async () => {
     const response = await client.company.search({
       query: "SELECT * FROM companies WHERE name ILIKE '%google%'",
-      size: 1,
+      limit: 1,
     });
     expect(response).toBeDefined();
     expect(Array.isArray(response.matches)).toBe(true);
@@ -110,11 +126,27 @@ describe.skip('Company', () => {
   test.skipIf(!hasApiKey)('discover returns matches', async () => {
     const response = await client.company.discover({
       query: 'find tech companies',
-      size: 1,
+      limit: 1,
     });
     expect(response).toBeDefined();
     expect(Array.isArray(response.matches)).toBe(true);
   });
+
+  test.skipIf(!hasApiKey)('bulkEnrich returns results array', async () => {
+    const response = await client.company.bulkEnrich({
+      items: [
+        { domain: 'google.com' },
+        { domain: 'datalegion.ai' },
+      ],
+    });
+
+    expect(response).toBeDefined();
+    expect(Array.isArray(response.results)).toBe(true);
+    expect(response.results.length).toBe(2);
+    for (const result of response.results) {
+      expect('matches' in result || 'error' in result).toBe(true);
+    }
+  }, 30_000);
 });
 
 // ---------------------------------------------------------------------------
