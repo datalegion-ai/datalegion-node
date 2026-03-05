@@ -45,6 +45,7 @@ export interface Location {
   continent: string | null;
   continent_code: string | null;
   postal_code: string | null;
+  postal_code_4: string | null;
   geo: string | null;
   raw: string[];
   current: boolean | null;
