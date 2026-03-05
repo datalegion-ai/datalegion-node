@@ -72,6 +72,7 @@ export interface Experience {
   job_function: string | null;
   expense_category: string | null;
   is_decision_maker: boolean | null;
+  is_platform_worker: boolean | null;
   organization: ExperienceOrganization | null;
   start_date: string | null;
   end_date: string | null;
@@ -171,6 +172,7 @@ export interface PersonResponse {
   job_function: string | null;
   expense_category: string | null;
   is_decision_maker: boolean | null;
+  is_platform_worker: boolean | null;
   years_of_experience: number | null;
   avg_tenure_months: number | null;
   highest_degree_level: string | null;
