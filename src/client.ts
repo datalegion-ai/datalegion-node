@@ -226,7 +226,7 @@ export class DataLegion {
     }
 
     this._apiKey = apiKey;
-    this._baseURL = (options.baseURL ?? DEFAULT_BASE_URL).replace(/\/+$/, '');
+    this._baseURL = (options.baseURL ?? DEFAULT_BASE_URL).replace(/\/$/, '');
     this._timeout = options.timeout ?? DEFAULT_TIMEOUT;
     this._defaultHeaders = options.defaultHeaders ?? {};
 
