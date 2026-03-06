@@ -26,7 +26,7 @@ describe('Client initialization', () => {
   });
 
   test('accepts an explicit API key', () => {
-    const client = new DataLegion({ apiKey: 'legion_test_key' });
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
     expect(client).toBeInstanceOf(DataLegion);
     expect(client.person).toBeDefined();
     expect(client.company).toBeDefined();

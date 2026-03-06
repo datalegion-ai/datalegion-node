@@ -31,7 +31,7 @@ npm install datalegion
 ```typescript
 import DataLegion from 'datalegion';
 
-const client = new DataLegion({ apiKey: 'legion_live_...' });
+const client = new DataLegion({ apiKey: 'legion_...' });
 ```
 
 Or set the `DATALEGION_API_KEY` environment variable and omit the constructor argument:
@@ -257,7 +257,7 @@ Each error exposes `statusCode`, `error`, `message`, and `details` properties.
 
 ```typescript
 const client = new DataLegion({
-  apiKey: 'legion_live_...',       // required (or set DATALEGION_API_KEY env var)
+  apiKey: 'legion_...',       // required (or set DATALEGION_API_KEY env var)
   baseURL: 'https://api.datalegion.ai', // default
   timeout: 60000,                  // default: 60s
   defaultHeaders: {                // optional extra headers

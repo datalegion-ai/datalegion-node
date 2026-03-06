@@ -208,7 +208,7 @@ export class DataLegion {
    * Create a new Data Legion client.
    *
    * ```ts
-   * const client = new DataLegion({ apiKey: 'legion_live_...' });
+   * const client = new DataLegion({ apiKey: 'legion_...' });
    * ```
    *
    * If `apiKey` is omitted the client reads `DATALEGION_API_KEY` from the

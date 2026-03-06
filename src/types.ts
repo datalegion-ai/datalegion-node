@@ -606,7 +606,7 @@ export interface ValidateParams {
 
 /** Options for constructing a `DataLegion` client. */
 export interface ClientOptions {
-  /** API key (e.g. `'legion_live_...'`). Falls back to `DATALEGION_API_KEY` env var. */
+  /** API key (e.g. `'legion_...'`). Falls back to `DATALEGION_API_KEY` env var. */
   apiKey?: string;
   /** Base URL for the API. Defaults to `'https://api.datalegion.ai'`. */
   baseURL?: string;
