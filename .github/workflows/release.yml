@@ -65,7 +65,7 @@ jobs:
   publish-npm:
     name: Publish to npm
     needs: [lint, test]
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read

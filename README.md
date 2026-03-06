@@ -1,8 +1,8 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset=".github/logo-light.svg">
-    <source media="(prefers-color-scheme: light)" srcset=".github/logo.svg">
-    <img alt="Data Legion" src=".github/logo.svg" width="260">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/datalegion-ai/datalegion-node/main/.github/logo-light.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/datalegion-ai/datalegion-node/main/.github/logo.svg">
+    <img alt="Data Legion" src="https://raw.githubusercontent.com/datalegion-ai/datalegion-node/main/.github/logo.svg" width="260">
   </picture>
 </p>
 
