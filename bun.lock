@@ -5,18 +5,21 @@
     "": {
       "name": "datalegion",
       "devDependencies": {
-        "@eslint/js": "^9.39.3",
-        "@types/node": "^25.3.3",
+        "@eslint/js": "^9.39.4",
+        "@types/node": "^25.5.0",
         "dotenv": "^17.3.1",
-        "eslint": "^9.39.3",
+        "eslint": "^9.39.4",
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-sort-keys-fix": "^1.1.2",
         "eslint-plugin-unused-imports": "^4.4.1",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.56.1",
-        "vitest": "^4.0.18",
+        "typescript-eslint": "^8.57.1",
+        "vitest": "^4.1.0",
       },
     },
+  },
+  "overrides": {
+    "flatted": "^3.4.0",
   },
   "packages": {
     "@esbuild/aix-ppc64": ["@esbuild/aix-ppc64@0.27.3", "", { "os": "aix", "cpu": "ppc64" }, "sha512-9fJMTNFTWZMh5qwrBItuziu834eOCUcEqymSH7pY+zoMVEZg3gcPuBNxH1EvfVYe9h0x/Ptw8KBzv7qxb7l8dg=="],
@@ -337,7 +340,7 @@
 
     "flat-cache": ["flat-cache@4.0.1", "", { "dependencies": { "flatted": "^3.2.9", "keyv": "^4.5.4" } }, "sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw=="],
 
-    "flatted": ["flatted@3.3.3", "", {}, "sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg=="],
+    "flatted": ["flatted@3.4.1", "", {}, "sha512-IxfVbRFVlV8V/yRaGzk0UVIcsKKHMSfYw66T/u4nTwlWteQePsxe//LjudR1AMX4tZW3WFCh3Zqa/sjlqpbURQ=="],
 
     "for-each": ["for-each@0.3.5", "", { "dependencies": { "is-callable": "^1.2.7" } }, "sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg=="],
 
