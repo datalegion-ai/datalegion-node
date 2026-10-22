@@ -1,0 +1,6 @@
+# OSV-Scanner configuration
+#
+# Add [[IgnoredVulns]] entries here when osv-scanner reports a CVE that
+# doesn't actually apply (false positive due to incorrect affected range,
+# unreachable code path, etc.). Always include a `reason` so the next
+# person knows why it's ignored.

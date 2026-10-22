@@ -1,0 +1,53 @@
+version: 2
+updates:
+  # "bun", not "npm": this repo's only lockfile is bun.lock, which the npm
+  # ecosystem cannot parse — so lockfile-level and transitive security updates
+  # were silently not happening (2 dependabot commits in the repo's whole
+  # history vs. regular grouped PRs in web, which declares "bun"). Fixed 2026-07-19.
+  - package-ecosystem: "bun"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    cooldown:
+      default-days: 1
+    labels:
+      - "dependencies"
+      - "javascript"
+    commit-message:
+      prefix: "chore(deps)"
+    ignore:
+      # typescript 7 breaks the typescript-eslint toolchain (peers <6.1.0;
+      # proven red in web). 6.x patches still flow. On the lift, also check that
+      # tests/_conventions.ts runs: it reads tests with TypeScript's JS API
+      # (createSourceFile, forEachChild).
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    cooldown:
+      default-days: 1
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      actions:
+        patterns:
+          - "*"

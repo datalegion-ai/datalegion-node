@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.env
+.pytest_cache/
+
+# Generated files in src/
+src/*.js
+src/*.d.ts
+src/*.js.map
+
+# macOS
+.DS_Store
+
+# Local agent instructions: never in the repo (it goes public at release) or the package
+.claude/
+
+# npm pack output
+*.tgz

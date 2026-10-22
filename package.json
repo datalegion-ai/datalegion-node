@@ -1,0 +1,70 @@
+{
+  "name": "datalegion",
+  "version": "0.8.2",
+  "description": "TypeScript client for the Data Legion API",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "gen:version": "node scripts/gen-version.mjs",
+    "build": "node scripts/gen-version.mjs && bun run tsc && bun run tsc -p tsconfig.esm.json && echo '{\"type\":\"module\"}' > dist/esm/package.json",
+    "lint": "bun run eslint . --max-warnings 0",
+    "lint:fix": "bun run eslint . --fix",
+    "prepublishOnly": "bun run build",
+    "version": "node scripts/gen-version.mjs && git add src/version.ts",
+    "test": "vitest run",
+    "prepare": "lefthook install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datalegion-ai/datalegion-node.git"
+  },
+  "homepage": "https://www.datalegion.ai/docs",
+  "bugs": {
+    "url": "https://github.com/datalegion-ai/datalegion-node/issues"
+  },
+  "keywords": [
+    "datalegion",
+    "api",
+    "sdk",
+    "typescript",
+    "person-enrichment",
+    "company-enrichment",
+    "data-enrichment",
+    "b2b",
+    "contact-data"
+  ],
+  "author": "Data Legion <engineering@datalegion.ai>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.5",
+    "@vitest/coverage-v8": "^5.0.5",
+    "dotenv": "^18.0.8",
+    "eslint": "^10.13.0",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-perfectionist": "^5.13.0",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "lefthook": "^2.2.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
+  }
+}
