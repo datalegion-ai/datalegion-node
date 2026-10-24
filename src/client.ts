@@ -271,6 +271,13 @@ export class DataLegion {
    */
   totalCountStatus: string | null = null;
 
+  /**
+   * `Search-Warning` header (search/discover only): why a filter was flagged
+   * (for example an industry name no stored value matches) and what to change.
+   * `null` when the search had nothing to say.
+   */
+  searchWarning: string | null = null;
+
   /** @internal */
   private _apiKey: string;
 
@@ -349,6 +356,7 @@ export class DataLegion {
     this.retryAfter = numHeader(headers, 'Retry-After');
     this.correlationId = headers.get('Correlation-ID');
     this.totalCountStatus = headers.get('Total-Count-Status');
+    this.searchWarning = headers.get('Search-Warning');
   }
 
   /**
