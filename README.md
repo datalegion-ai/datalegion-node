@@ -245,7 +245,7 @@ console.log(client.searchWarning);        // search/discover: why a filter was f
 
 On `search`/`discover`, `totalCountStatus` tells you how the response `total` was derived: `"exact"` (true count), `"estimate"` (the query planner's row estimate, returned on broad queries where an exact count is too expensive — treat it as a magnitude), or `"page"` (count unavailable; `total` is just the returned page size).
 
-`searchWarning` is set when a search flags one of its filters: for example an industry name that no stored value matches (the page comes back empty without being charged), or a pattern too short to search efficiently. It says what to change.
+`searchWarning` is set when a search flags one of its filters: for example an industry name that no stored value matches (the page comes back empty without being charged). It says what to change.
 
 ## Error Handling
 
