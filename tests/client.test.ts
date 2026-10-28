@@ -383,6 +383,7 @@ describe('Request core (mocked fetch)', () => {
         'RateLimit-Limit': '100',
         'RateLimit-Remaining': '',
         'Request-ID': 'req_123',
+        'Search-Warning': "No company_industry value matches 'x'",
         'Total-Count-Status': 'estimate',
       }),
     );
@@ -394,6 +395,14 @@ describe('Request core (mocked fetch)', () => {
     expect(client.rateLimitLimit).toBe(100);
     expect(client.rateLimitRemaining).toBeNull(); // '' -> null
     expect(client.totalCountStatus).toBe('estimate');
+    expect(client.searchWarning).toBe("No company_industry value matches 'x'");
+  });
+
+  test('searchWarning is null without the header', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse(200, { status: 'ok' }));
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    await client.health();
+    expect(client.searchWarning).toBeNull();
   });
 
   test('an aborted request surfaces as a timeout error', async () => {
