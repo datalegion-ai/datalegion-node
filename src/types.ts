@@ -492,7 +492,7 @@ export interface ValidationResponse {
   errors: ValidationErrorDetail[];
   warnings: ValidationWarning[];
   suggestions: ValidationSuggestion[];
-  /** Present when an email was sent and is well-formed. */
+  /** What the email's domain says; null unless an email was sent and is well-formed. */
   email_check?: EmailDomainCheck | null;
 }
 
