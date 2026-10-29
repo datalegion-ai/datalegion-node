@@ -468,12 +468,32 @@ export interface ValidationSuggestion {
   cleaned?: string | Record<string, string> | null;
 }
 
+/** What a validated email's domain says about the address (the mailbox itself is not checked). */
+export interface EmailDomainCheck {
+  /** The domain checked, in ASCII (punycode) form. */
+  domain: string;
+  /** Whether the domain takes mail. */
+  mail: 'implicit' | 'mx' | 'none' | 'null_mx' | 'unknown';
+  /** Mail servers, best first (empty unless `mail` is `mx`). */
+  mail_servers: string[];
+  /** Throwaway inbox service. */
+  disposable: boolean;
+  /** Free personal mailbox provider. */
+  free: boolean;
+  /** Alias or relay service that forwards to a hidden inbox. */
+  relay: boolean;
+  /** The webmail domain this one looks like a typo of. */
+  intended_domain?: string | null;
+}
+
 /** Response from the `/utility/validate` endpoint. */
 export interface ValidationResponse {
   valid: boolean;
   errors: ValidationErrorDetail[];
   warnings: ValidationWarning[];
   suggestions: ValidationSuggestion[];
+  /** Present when an email was sent and is well-formed. */
+  email_check?: EmailDomainCheck | null;
 }
 
 /** Issue categories for data-issue reports. */
