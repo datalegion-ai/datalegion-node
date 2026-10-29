@@ -1,6 +1,6 @@
 {
   "name": "datalegion",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "TypeScript client for the Data Legion API",
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.ts",
