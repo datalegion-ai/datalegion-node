@@ -191,6 +191,8 @@ describe('Utility', () => {
     expect(Array.isArray(response.errors)).toBe(true);
     expect(Array.isArray(response.warnings)).toBe(true);
     expect(Array.isArray(response.suggestions)).toBe(true);
+    expect(response.email_check?.domain).toBe('gmail.com');
+    expect(response.email_check?.free).toBe(true);
   });
 
   test.skipIf(!hasApiKey)('reportPerson rejects an invalid type/level combination with 422', async () => {

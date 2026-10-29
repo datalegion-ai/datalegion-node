@@ -38,6 +38,7 @@ export type {
 
   EducationOrganization,
   Email,
+  EmailDomainCheck,
   EmailHashResponse,
   EmployeeCountByMonth,
 
