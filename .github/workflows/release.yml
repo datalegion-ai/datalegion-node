@@ -13,7 +13,7 @@ concurrency:
 jobs:
   lint:
     name: Lint & Build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -46,7 +46,7 @@ jobs:
 
   test:
     name: Test (Node.js ${{ matrix.node-version }})
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -81,7 +81,7 @@ jobs:
     needs: [lint, test]
     # npm --provenance only accepts GitHub-hosted runners.
     # Pinned rather than ubuntu-latest so the image changes only when we move it.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -114,7 +114,7 @@ jobs:
   publish-gpr:
     name: Publish to GitHub Packages
     needs: [lint, test]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -152,7 +152,7 @@ jobs:
   github-release:
     name: Create GitHub Release
     needs: [publish-npm, publish-gpr]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
       contents: write

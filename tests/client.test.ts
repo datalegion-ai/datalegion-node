@@ -4,7 +4,9 @@ import { AuthenticationError, BadRequestError, DataLegionError, InsufficientCred
 import { DataLegion } from '../src/index';
 
 const API_KEY = process.env.DATALEGION_API_KEY;
-const hasApiKey = !!API_KEY;
+if (!API_KEY) {
+  throw new Error('Set DATALEGION_API_KEY to run the live tests (CI reads it from the repo secret).');
+}
 
 // No real person in the code: person lookups that need a match run in sandbox mode, whose record fills
 // every field and names no one; mocked tests and a bad key don't depend on the input.
@@ -42,10 +44,10 @@ describe('Client initialization', () => {
 // ---------------------------------------------------------------------------
 
 describe('Person', () => {
-  const client = hasApiKey ? new DataLegion({ apiKey: API_KEY }) : (null as unknown as DataLegion);
-  const sandbox = hasApiKey ? new DataLegion({ apiKey: API_KEY, sandbox: true }) : (null as unknown as DataLegion);
+  const client = new DataLegion({ apiKey: API_KEY });
+  const sandbox = new DataLegion({ apiKey: API_KEY, sandbox: true });
 
-  test.skipIf(!hasApiKey)('enrich returns expected shape', async () => {
+  test('enrich returns expected shape', async () => {
     const response = await sandbox.person.enrich({ social_url: MADE_UP_PROFILE });
 
     expect(response).toBeDefined();
@@ -56,7 +58,7 @@ describe('Person', () => {
     expect('last_name' in response).toBe(true);
   });
 
-  test.skipIf(!hasApiKey)('search returns matches', { retry: 2, timeout: 30_000 }, async () => {
+  test('search returns matches', { retry: 2, timeout: 30_000 }, async () => {
     const response = await client.person.search({
       limit: 1,
       query: "SELECT * FROM people WHERE job_title ILIKE '%engineer%' AND company_name ILIKE '%google%'",
@@ -72,7 +74,7 @@ describe('Person', () => {
     }
   });
 
-  test.skipIf(!hasApiKey)('discover returns matches', { retry: 2, timeout: 30_000 }, async () => {
+  test('discover returns matches', { retry: 2, timeout: 30_000 }, async () => {
     const response = await client.person.discover({
       limit: 1,
       query: 'find software engineers at google',
@@ -88,7 +90,7 @@ describe('Person', () => {
     }
   });
 
-  test.skipIf(!hasApiKey)('bulkEnrich returns results array', async () => {
+  test('bulkEnrich returns results array', async () => {
     const response = await sandbox.person.bulkEnrich({
       items: [
         { social_url: MADE_UP_PROFILE },
@@ -110,15 +112,15 @@ describe('Person', () => {
 // ---------------------------------------------------------------------------
 
 describe('Company', () => {
-  const client = hasApiKey ? new DataLegion({ apiKey: API_KEY }) : (null as unknown as DataLegion);
+  const client = new DataLegion({ apiKey: API_KEY });
 
-  test.skipIf(!hasApiKey)('enrich returns expected shape', async () => {
+  test('enrich returns expected shape', async () => {
     const response = await client.company.enrich({ domain: 'google.com' });
     expect(response).toBeDefined();
     expect(typeof response.legion_id).toBe('string');
   });
 
-  test.skipIf(!hasApiKey)('search returns matches', { retry: 2, timeout: 30_000 }, async () => {
+  test('search returns matches', { retry: 2, timeout: 30_000 }, async () => {
     const response = await client.company.search({
       limit: 1,
       query: "SELECT * FROM companies WHERE domain ILIKE '%google%'",
@@ -127,7 +129,7 @@ describe('Company', () => {
     expect(Array.isArray(response.matches)).toBe(true);
   });
 
-  test.skipIf(!hasApiKey)('discover returns matches', { retry: 2, timeout: 30_000 }, async () => {
+  test('discover returns matches', { retry: 2, timeout: 30_000 }, async () => {
     const response = await client.company.discover({
       limit: 1,
       query: 'enterprise software companies with over 1000 employees',
@@ -136,7 +138,7 @@ describe('Company', () => {
     expect(Array.isArray(response.matches)).toBe(true);
   });
 
-  test.skipIf(!hasApiKey)('bulkEnrich returns results array', async () => {
+  test('bulkEnrich returns results array', async () => {
     const response = await client.company.bulkEnrich({
       items: [
         { domain: 'google.com' },
@@ -158,9 +160,9 @@ describe('Company', () => {
 // ---------------------------------------------------------------------------
 
 describe('Utility', () => {
-  const client = hasApiKey ? new DataLegion({ apiKey: API_KEY }) : (null as unknown as DataLegion);
+  const client = new DataLegion({ apiKey: API_KEY });
 
-  test.skipIf(!hasApiKey)('clean returns cleaned response', async () => {
+  test('clean returns cleaned response', async () => {
     const response = await client.utility.clean({
       fields: { email: '  JOHN@EXAMPLE.COM  ' },
     });
@@ -172,7 +174,7 @@ describe('Utility', () => {
     expect('cleaned' in response.results.email).toBe(true);
   });
 
-  test.skipIf(!hasApiKey)('hashEmail returns hashes', async () => {
+  test('hashEmail returns hashes', async () => {
     const response = await client.utility.hashEmail({ email: 'jane.doe@gmail.com' });
 
     expect(response).toBeDefined();
@@ -183,7 +185,7 @@ describe('Utility', () => {
     expect(response.hashes.sha256.length).toBeGreaterThan(0);
   });
 
-  test.skipIf(!hasApiKey)('validate returns validation response', async () => {
+  test('validate returns validation response', async () => {
     const response = await client.utility.validate({ email: 'jane.doe@gmail.com' });
 
     expect(response).toBeDefined();
@@ -195,7 +197,7 @@ describe('Utility', () => {
     expect(response.email_check?.free).toBe(true);
   });
 
-  test.skipIf(!hasApiKey)('reportPerson rejects an invalid type/level combination with 422', async () => {
+  test('reportPerson rejects an invalid type/level combination with 422', async () => {
     await expect(client.utility.reportPerson({
       comment: 'x',
       field: 'job_title',
@@ -464,9 +466,9 @@ describe('Error handling', () => {
 // ---------------------------------------------------------------------------
 
 describe('Response headers', () => {
-  const client = hasApiKey ? new DataLegion({ apiKey: API_KEY }) : (null as unknown as DataLegion);
+  const client = new DataLegion({ apiKey: API_KEY });
 
-  test.skipIf(!hasApiKey)('requestId is set after a request', async () => {
+  test('requestId is set after a request', async () => {
     expect(client.requestId).toBeNull();
 
     await client.utility.validate({ email: 'jane.doe@gmail.com' });
@@ -512,8 +514,8 @@ describe('Sandbox mode', () => {
     );
   });
 
-  test.skipIf(!hasApiKey)('returns sample records from the live sandbox', async () => {
-    const client = new DataLegion({ apiKey: API_KEY!, sandbox: true });
+  test('returns sample records from the live sandbox', async () => {
+    const client = new DataLegion({ apiKey: API_KEY, sandbox: true });
     expect((await client.person.enrich({ email: 'anyone@example.org' })).legion_id).toMatch(/^sandbox_/);
     expect((await client.company.enrich({ domain: 'example.org' })).legion_id).toMatch(/^sandbox_/);
   });
