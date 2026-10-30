@@ -515,7 +515,7 @@ describe('Sandbox mode', () => {
   });
 
   test('returns sample records from the live sandbox', async () => {
-    const client = new DataLegion({ apiKey: API_KEY!, sandbox: true });
+    const client = new DataLegion({ apiKey: API_KEY, sandbox: true });
     expect((await client.person.enrich({ email: 'anyone@example.org' })).legion_id).toMatch(/^sandbox_/);
     expect((await client.company.enrich({ domain: 'example.org' })).legion_id).toMatch(/^sandbox_/);
   });
