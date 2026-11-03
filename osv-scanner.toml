@@ -4,3 +4,12 @@
 # doesn't actually apply (false positive due to incorrect affected range,
 # unreachable code path, etc.). Always include a `reason` so the next
 # person knows why it's ignored.
+
+# minimatch 10.2.6 (GHSA-g3hv-75wg-m249, fixed only in 11.0.1): a crafted pattern can blow up
+# brace expansion. It reaches us only through eslint's @eslint/config-array, which matches the
+# patterns in our own eslint config; the published package has no dependencies at all. Its
+# parents' newest releases still ask for ^10 (eslint 10.14.0, @eslint/config-array 0.23.5), and
+# minimatch 11 drops the default export they import. Lift when they accept minimatch 11.0.1.
+[[IgnoredVulns]]
+id = "GHSA-g3hv-75wg-m249"
+reason = "Lint tooling only (eslint config-array over our own config); no parent accepts minimatch 11 yet. Lift when they do."
