@@ -350,6 +350,19 @@ describe('Request core (mocked fetch)', () => {
   const jsonResponse = (status: number, body: unknown, headers: Record<string, string> = {}): Response =>
     new Response(JSON.stringify(body), { headers: { 'content-type': 'application/json', ...headers }, status });
 
+  test('search and discover leave limit to the API (one result) unless given', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, { matches: [], total: 0 }));
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    await client.person.search({ query: "SELECT * FROM people WHERE state = 'ohio'" });
+    await client.person.discover({ query: 'engineers in ohio' });
+    await client.company.search({ query: "SELECT * FROM companies WHERE industry = 'banking'" });
+    await client.company.discover({ query: 'banks in ohio' });
+    await client.person.search({ limit: 25, query: "SELECT * FROM people WHERE state = 'ohio'" });
+    const bodies = fetchMock.mock.calls.map(([, init]) => JSON.parse(String(init?.body)) as Record<string, unknown>);
+    expect(bodies.map((b) => 'limit' in b)).toEqual([false, false, false, false, true]);
+    expect(bodies[4]?.limit).toBe(25);
+  });
+
   test.each([
     [400, BadRequestError],
     [401, AuthenticationError],
