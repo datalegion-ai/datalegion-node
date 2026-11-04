@@ -66,7 +66,7 @@ for (const match of results.matches) {
 
 ## Person Search
 
-Search for people using a SQL query.
+Search for people using a SQL query. `limit` is optional: without it the API returns one result (max 100).
 
 ```typescript
 const results = await client.person.search({

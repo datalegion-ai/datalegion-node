@@ -634,8 +634,8 @@ export interface CompanyEnrichParams extends EnrichResponseOptions {
 export interface SearchParams extends SearchResponseOptions {
   /** SQL query to execute. */
   query: string;
-  /** Maximum number of results (1-100). */
-  limit: number;
+  /** Maximum number of results (1-100, default 1: the API returns one result when omitted). */
+  limit?: number;
   /** Number of results to skip for pagination (0-10000, default 0). */
   offset?: number;
 }
@@ -644,8 +644,8 @@ export interface SearchParams extends SearchResponseOptions {
 export interface DiscoverParams extends SearchResponseOptions {
   /** Natural language search query. */
   query: string;
-  /** Maximum number of results (1-100). */
-  limit: number;
+  /** Maximum number of results (1-100, default 1: the API returns one result when omitted). */
+  limit?: number;
   /** Number of results to skip for pagination (0-10000, default 0). */
   offset?: number;
 }
