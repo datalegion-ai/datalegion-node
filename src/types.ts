@@ -372,7 +372,6 @@ export interface PersonMatchesResponse {
 /** A single result from a Person Bulk Enrich request. */
 export interface BulkPersonItemResult {
   matches?: PersonMatch[] | null;
-  total?: number | null;
   error?: string | null;
   metadata?: Record<string, string | number | boolean> | null;
 }
@@ -413,7 +412,6 @@ export interface CompanyMatchesResponse {
 /** A single result from a Company Bulk Enrich request. */
 export interface BulkCompanyItemResult {
   matches?: CompanyMatch[] | null;
-  total?: number | null;
   error?: string | null;
   metadata?: Record<string, string | number | boolean> | null;
 }
