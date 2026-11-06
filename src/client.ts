@@ -79,17 +79,10 @@ export class PersonResource {
    * Enrich a person by email, phone, social URL, name+location, or other
    * identifiers.
    *
-   * When `multiple_results` is `true` the return type is
-   * `PersonMatchesResponse`; otherwise a single `PersonResponse` is returned.
+   * Returns the one best match.
    */
-  async enrich(params: PersonEnrichParams & { multiple_results: true }): Promise<PersonMatchesResponse>;
-  async enrich(params: PersonEnrichParams & { multiple_results?: false }): Promise<PersonResponse>;
-  async enrich(params: PersonEnrichParams): Promise<PersonResponse | PersonMatchesResponse>;
-  async enrich(params: PersonEnrichParams): Promise<PersonResponse | PersonMatchesResponse> {
+  async enrich(params: PersonEnrichParams): Promise<PersonResponse> {
     const data = await this._client._request<PersonMatchesResponse>('POST', '/person/enrich', params);
-    if (params.multiple_results) {
-      return data;
-    }
     // Defensive: the API 404s on no match (thrown in _request before here), so a
     // 200 always has a match. Guard the invariant to avoid an opaque TypeError.
     const first = data.matches?.[0];
@@ -142,17 +135,10 @@ export class CompanyResource {
   /**
    * Enrich a company by domain, name, LinkedIn ID, social URL, or ticker.
    *
-   * When `multiple_results` is `true` the return type is
-   * `CompanyMatchesResponse`; otherwise a single `CompanyResponse` is returned.
+   * Returns the one best match.
    */
-  async enrich(params: CompanyEnrichParams & { multiple_results: true }): Promise<CompanyMatchesResponse>;
-  async enrich(params: CompanyEnrichParams & { multiple_results?: false }): Promise<CompanyResponse>;
-  async enrich(params: CompanyEnrichParams): Promise<CompanyResponse | CompanyMatchesResponse>;
-  async enrich(params: CompanyEnrichParams): Promise<CompanyResponse | CompanyMatchesResponse> {
+  async enrich(params: CompanyEnrichParams): Promise<CompanyResponse> {
     const data = await this._client._request<CompanyMatchesResponse>('POST', '/company/enrich', params);
-    if (params.multiple_results) {
-      return data;
-    }
     // Defensive: the API 404s on no match (thrown in _request before here), so a
     // 200 always has a match. Guard the invariant to avoid an opaque TypeError.
     const first = data.matches?.[0];

@@ -60,6 +60,19 @@ describe('published types', () => {
     expect(typecheck(dir)).toBe('');
   });
 
+  test('enrich answers one best match: no multiple_results, no limit on bulk', () => {
+    const source = `import DataLegion, { type CompanyResponse, type PersonResponse } from 'datalegion';
+const client = new DataLegion({ apiKey: 'k' });
+export const person: Promise<PersonResponse> = client.person.enrich({ email: 'a@example.com' });
+export const company: Promise<CompanyResponse> = client.company.enrich({ domain: 'example.com' });
+// @ts-expect-error enrich answers one best match: no multiple_results
+client.person.enrich({ email: 'a@example.com', multiple_results: true });
+// @ts-expect-error no limit on bulk enrich
+client.company.bulkEnrich({ items: [{ domain: 'example.com' }], limit: 3 });
+`;
+    expect(typecheck(project('one-match', 'module', source))).toBe('');
+  });
+
   test('a CommonJS project type-checks without @types/node', () => {
     const dir = project('cjs', 'commonjs', `import { DataLegion, DataLegionError, NotFoundError } from 'datalegion';\n${usage}`);
     expect(typecheck(dir)).toBe('');
