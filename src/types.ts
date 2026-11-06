@@ -142,7 +142,7 @@ export interface Certification {
 // Person Response
 // ---------------------------------------------------------------------------
 
-/** Complete person enrichment response. */
+/** Complete Person Enrich response. */
 export interface PersonResponse {
   legion_id: string;
   full_name: string | null;
@@ -292,7 +292,7 @@ export interface TimeBucketFloat {
   '12m': number | null;
 }
 
-/** Complete company enrichment response. */
+/** Complete Company Enrich response. */
 export interface CompanyResponse {
   legion_id: string;
 
@@ -363,13 +363,13 @@ export interface PersonMatch {
   match_metadata?: MatchMetadata;
 }
 
-/** Response wrapper for multiple person matches (enrich with `multiple_results`, search, discover). */
+/** Response wrapper for multiple person matches (Enrich with `multiple_results`, Search, Discover). */
 export interface PersonMatchesResponse {
   matches: PersonMatch[];
   total: number;
 }
 
-/** A single result from a bulk person enrichment request. */
+/** A single result from a Person Bulk Enrich request. */
 export interface BulkPersonItemResult {
   matches?: PersonMatch[] | null;
   total?: number | null;
@@ -377,12 +377,12 @@ export interface BulkPersonItemResult {
   metadata?: Record<string, string | number | boolean> | null;
 }
 
-/** Response from a bulk person enrichment request. */
+/** Response from a Person Bulk Enrich request. */
 export interface BulkPersonEnrichResponse {
   results: BulkPersonItemResult[];
 }
 
-/** One item's result from a dynamic bulk enrichment (phones/emails only). */
+/** One item's result from a Dynamic Bulk Enrich (phones/emails only). */
 export interface DynamicBulkPersonResult {
   metadata?: Record<string, string | number | boolean> | null;
   legion_id?: string | null;
@@ -393,7 +393,7 @@ export interface DynamicBulkPersonResult {
   error?: string | null;
 }
 
-/** Response from a dynamic bulk person enrichment request (phones/emails only). */
+/** Response from a Person Dynamic Bulk Enrich request (phones/emails only). */
 export interface DynamicBulkPersonEnrichResponse {
   results: DynamicBulkPersonResult[];
 }
@@ -410,7 +410,7 @@ export interface CompanyMatchesResponse {
   total: number;
 }
 
-/** A single result from a bulk company enrichment request. */
+/** A single result from a Company Bulk Enrich request. */
 export interface BulkCompanyItemResult {
   matches?: CompanyMatch[] | null;
   total?: number | null;
@@ -418,7 +418,7 @@ export interface BulkCompanyItemResult {
   metadata?: Record<string, string | number | boolean> | null;
 }
 
-/** Response from a bulk company enrichment request. */
+/** Response from a Company Bulk Enrich request. */
 export interface BulkCompanyEnrichResponse {
   results: BulkCompanyItemResult[];
 }
@@ -546,7 +546,7 @@ export interface HealthResponse {
 // Request Parameter Types
 // ---------------------------------------------------------------------------
 
-/** Shared response-option fields used across enrich endpoints. */
+/** Shared response-option fields used across the Enrich endpoints. */
 interface EnrichResponseOptions {
   /** If true, return multiple matches sorted by confidence. */
   multiple_results?: boolean;
@@ -571,7 +571,7 @@ interface EnrichResponseOptions {
   pretty_print?: boolean;
 }
 
-/** Shared response-option fields for search and discover endpoints. */
+/** Shared response-option fields for the Search and Discover endpoints. */
 interface SearchResponseOptions {
   /** If true, format text fields in title case. */
   titlecase?: boolean;
@@ -645,7 +645,7 @@ export interface DiscoverParams extends SearchResponseOptions {
   offset?: number;
 }
 
-/** Shared top-level defaults for bulk enrichment requests. */
+/** Shared top-level defaults for Bulk Enrich requests. */
 interface BulkEnrichDefaults {
   /** If true, return multiple matches sorted by confidence. */
   multiple_results?: boolean;
@@ -764,7 +764,7 @@ export interface ClientOptions {
   /** Default headers to include with every request. */
   defaultHeaders?: Record<string, string>;
   /**
-   * Sandbox mode: enrich, bulk enrich, search and discover return sample records with every field a
+   * Sandbox mode: Enrich, Bulk Enrich, Search and Discover return sample records with every field a
    * real record has, and use no credits. Utilities call the real API (they are free). Defaults to `false`.
    */
   sandbox?: boolean;

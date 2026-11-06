@@ -53,7 +53,7 @@ export class InsufficientCreditsError extends withStatus(402, 'InsufficientCredi
 /** Raised when the key or its contract doesn't cover the endpoint (HTTP 403). */
 export class PermissionDeniedError extends withStatus(403, 'PermissionDeniedError') {}
 
-/** Raised when nothing matches, e.g. an enrich with no match (HTTP 404). No credits are used. */
+/** Raised when nothing matches, e.g. an Enrich with no match (HTTP 404). No credits are used. */
 export class NotFoundError extends withStatus(404, 'NotFoundError') {}
 
 /** Raised when a search runs past the API's time limit (HTTP 408). Narrow the query or retry. */

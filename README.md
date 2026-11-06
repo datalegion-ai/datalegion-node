@@ -14,7 +14,7 @@
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D22-brightgreen.svg" alt="Node.js"></a>
 </p>
 
-TypeScript client for the [Data Legion API](https://www.datalegion.ai/docs). Provides typed access to person enrichment, company enrichment, search, discovery, and utility endpoints.
+TypeScript client for the [Data Legion API](https://www.datalegion.ai/docs). Provides typed access to the Person and Company Enrich, Bulk Enrich, Search and Discover endpoints, and the utility endpoints.
 
 - Zero external dependencies -- uses built-in `fetch` (Node.js 22+)
 - Full TypeScript type definitions for all request and response objects
@@ -237,7 +237,7 @@ console.log(client.rateLimitRemaining);   // remaining requests in current windo
 console.log(client.rateLimitReset);       // unix timestamp when window resets
 console.log(client.rateLimitPolicy);      // rate limit policy (e.g. "100/min")
 console.log(client.retryAfter);           // seconds to wait (on 429 responses)
-console.log(client.generatedQuery);       // SQL from discover endpoints
+console.log(client.generatedQuery);       // SQL from the Discover endpoints
 console.log(client.correlationId);        // echoed Correlation-ID
 console.log(client.totalCountStatus);     // search/discover: "exact" | "estimate" | "page"
 console.log(client.searchWarning);        // search/discover: why a filter was flagged, or null
@@ -286,7 +286,7 @@ Each error exposes `statusCode`, `error`, `message`, and `details` properties. T
 
 ## Sandbox
 
-Pass `sandbox: true` to try the SDK without spending credits. Enrich, bulk enrich, search and discover then return sample records (Jane Sandbox, Sandbox Corp) with every field a real record has; the utilities, which are free anyway, call the real API.
+Pass `sandbox: true` to try the SDK without spending credits. Enrich, Bulk Enrich, Search and Discover then return sample records (Jane Sandbox, Sandbox Corp) with every field a real record has; the utilities, which are free anyway, call the real API.
 
 ```typescript
 const client = new DataLegion({ apiKey: 'legion_...', sandbox: true });
@@ -294,7 +294,7 @@ const person = await client.person.enrich({ email: 'anyone@example.com' });
 console.log(person.legion_id); // "sandbox_person_001"
 ```
 
-Sandbox discover answers only a few fixed example queries; the error lists them. If your API key is limited to certain endpoints, add the `/sandbox/...` ones.
+Sandbox Discover answers only a few fixed example queries; the error lists them. If your API key is limited to certain endpoints, add the `/sandbox/...` ones.
 
 ## Configuration
 
