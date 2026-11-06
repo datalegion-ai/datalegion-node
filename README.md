@@ -237,7 +237,7 @@ console.log(client.rateLimitRemaining);   // remaining requests in current windo
 console.log(client.rateLimitReset);       // unix timestamp when window resets
 console.log(client.rateLimitPolicy);      // rate limit policy (e.g. "100/min")
 console.log(client.retryAfter);           // seconds to wait (on 429 responses)
-console.log(client.generatedQuery);       // SQL from discover endpoints
+console.log(client.generatedQuery);       // SQL from the Discover endpoints
 console.log(client.correlationId);        // echoed Correlation-ID
 console.log(client.totalCountStatus);     // search/discover: "exact" | "estimate" | "page"
 console.log(client.searchWarning);        // search/discover: why a filter was flagged, or null
@@ -286,7 +286,7 @@ Each error exposes `statusCode`, `error`, `message`, and `details` properties. T
 
 ## Sandbox
 
-Pass `sandbox: true` to try the SDK without spending credits. Enrich, bulk enrich, search and discover then return sample records (Jane Sandbox, Sandbox Corp) with every field a real record has; the utilities, which are free anyway, call the real API.
+Pass `sandbox: true` to try the SDK without spending credits. Enrich, Bulk Enrich, Search and Discover then return sample records (Jane Sandbox, Sandbox Corp) with every field a real record has; the utilities, which are free anyway, call the real API.
 
 ```typescript
 const client = new DataLegion({ apiKey: 'legion_...', sandbox: true });

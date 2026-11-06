@@ -382,7 +382,7 @@ export interface BulkPersonEnrichResponse {
   results: BulkPersonItemResult[];
 }
 
-/** One item's result from a dynamic bulk enrichment (phones/emails only). */
+/** One item's result from a Dynamic Bulk Enrichment (phones/emails only). */
 export interface DynamicBulkPersonResult {
   metadata?: Record<string, string | number | boolean> | null;
   legion_id?: string | null;
@@ -546,7 +546,7 @@ export interface HealthResponse {
 // Request Parameter Types
 // ---------------------------------------------------------------------------
 
-/** Shared response-option fields used across enrich endpoints. */
+/** Shared response-option fields used across the Enrichment endpoints. */
 interface EnrichResponseOptions {
   /** If true, return multiple matches sorted by confidence. */
   multiple_results?: boolean;
@@ -571,7 +571,7 @@ interface EnrichResponseOptions {
   pretty_print?: boolean;
 }
 
-/** Shared response-option fields for search and discover endpoints. */
+/** Shared response-option fields for the Search and Discover endpoints. */
 interface SearchResponseOptions {
   /** If true, format text fields in title case. */
   titlecase?: boolean;
@@ -645,7 +645,7 @@ export interface DiscoverParams extends SearchResponseOptions {
   offset?: number;
 }
 
-/** Shared top-level defaults for bulk enrichment requests. */
+/** Shared top-level defaults for Bulk Enrichment requests. */
 interface BulkEnrichDefaults {
   /** If true, return multiple matches sorted by confidence. */
   multiple_results?: boolean;
@@ -764,7 +764,7 @@ export interface ClientOptions {
   /** Default headers to include with every request. */
   defaultHeaders?: Record<string, string>;
   /**
-   * Sandbox mode: enrich, bulk enrich, search and discover return sample records with every field a
+   * Sandbox mode: Enrich, Bulk Enrich, Search and Discover return sample records with every field a
    * real record has, and use no credits. Utilities call the real API (they are free). Defaults to `false`.
    */
   sandbox?: boolean;
