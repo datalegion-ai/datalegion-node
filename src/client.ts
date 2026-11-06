@@ -222,10 +222,10 @@ export class UtilityResource {
 
 /** TypeScript client for the Data Legion API. */
 export class DataLegion {
-  /** Person enrichment, search, and discovery. */
+  /** Person Enrich, Search, and Discover. */
   readonly person: PersonResource;
 
-  /** Company enrichment, search, and discovery. */
+  /** Company Enrich, Search, and Discover. */
   readonly company: CompanyResource;
 
   /** Data cleaning, hashing, validation, and data-issue reporting utilities. */
