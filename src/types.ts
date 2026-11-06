@@ -363,7 +363,7 @@ export interface PersonMatch {
   match_metadata?: MatchMetadata;
 }
 
-/** Response wrapper for multiple person matches (Enrich with `multiple_results`, Search, Discover). */
+/** Response wrapper for person matches (Search, Discover). */
 export interface PersonMatchesResponse {
   matches: PersonMatch[];
   total: number;
@@ -404,7 +404,7 @@ export interface CompanyMatch {
   match_metadata?: MatchMetadata;
 }
 
-/** Response wrapper for multiple company matches. */
+/** Response wrapper for company matches (Search, Discover). */
 export interface CompanyMatchesResponse {
   matches: CompanyMatch[];
   total: number;
@@ -548,10 +548,6 @@ export interface HealthResponse {
 
 /** Shared response-option fields used across the Enrich endpoints. */
 interface EnrichResponseOptions {
-  /** If true, return multiple matches sorted by confidence. */
-  multiple_results?: boolean;
-  /** Maximum number of results when `multiple_results` is true (1-10, default 2). */
-  limit?: number;
   /** Minimum match confidence level: `'high'`, `'moderate'`, or `'low'`. */
   min_confidence?: string;
   /** If true, format text fields in title case. */
@@ -647,10 +643,6 @@ export interface DiscoverParams extends SearchResponseOptions {
 
 /** Shared top-level defaults for Bulk Enrich requests. */
 interface BulkEnrichDefaults {
-  /** If true, return multiple matches sorted by confidence. */
-  multiple_results?: boolean;
-  /** Maximum number of results when `multiple_results` is true (1-10, default 2). */
-  limit?: number;
   /** Minimum match confidence level: `'high'`, `'moderate'`, or `'low'`. */
   min_confidence?: string;
   /** If true, format text fields in title case. */

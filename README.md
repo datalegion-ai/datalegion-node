@@ -50,20 +50,6 @@ console.log(person.full_name);
 console.log(person.job_title, 'at', person.company_name);
 ```
 
-Return multiple matches:
-
-```typescript
-const results = await client.person.enrich({
-  email: 'john@example.com',
-  multiple_results: true,
-  limit: 2,
-});
-
-for (const match of results.matches) {
-  console.log(match.person.full_name, '-', match.match_metadata?.match_confidence);
-}
-```
-
 ## Person Search
 
 Search for people using a SQL query. `limit` is optional: without it the API returns one result (max 100).
@@ -104,19 +90,6 @@ const company = await client.company.enrich({ domain: 'google.com' });
 console.log(company.name?.cleaned);
 console.log(company.industry, '-', company.size);
 console.log('Employees:', company.legion_employee_count);
-```
-
-Return multiple matches:
-
-```typescript
-const results = await client.company.enrich({
-  name: 'Google',
-  multiple_results: true,
-});
-
-for (const match of results.matches) {
-  console.log(match.company.name?.cleaned, '-', match.company.domain);
-}
 ```
 
 ## Company Search
