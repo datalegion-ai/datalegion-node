@@ -252,8 +252,8 @@ export class DataLegion {
 
   /**
    * `Total-Count-Status` header (search/discover only): how the response
-   * `total` was derived — `"exact"`, `"estimate"` (broad-query planner
-   * estimate, treat as a magnitude), or `"page"` (count unavailable).
+   * `total` was derived — `"exact"`, `"estimate"` (the count ran out of time:
+   * a lower bound), or `"page"` (count unavailable).
    */
   totalCountStatus: string | null = null;
 
