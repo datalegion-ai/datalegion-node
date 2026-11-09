@@ -367,6 +367,8 @@ export interface PersonMatch {
 export interface PersonMatchesResponse {
   matches: PersonMatch[];
   total: number;
+  /** Send back as `cursor` for the next page (Search only); absent on the last page. */
+  next_cursor?: string | null;
 }
 
 /** A single result from a Person Bulk Enrich request. */
@@ -407,6 +409,8 @@ export interface CompanyMatch {
 export interface CompanyMatchesResponse {
   matches: CompanyMatch[];
   total: number;
+  /** Send back as `cursor` for the next page (Search only); absent on the last page. */
+  next_cursor?: string | null;
 }
 
 /** A single result from a Company Bulk Enrich request. */
@@ -621,12 +625,20 @@ export interface CompanyEnrichParams extends EnrichResponseOptions {
 
 /** Parameters for `client.person.search()` and `client.company.search()`. */
 export interface SearchParams extends SearchResponseOptions {
-  /** SQL query to execute. */
-  query: string;
+  /**
+   * SQL query (a string), or an Elasticsearch-style query object: `bool`, `term`, `terms`, `match`,
+   * `match_phrase`, `range`, `exists`, `prefix`, `wildcard` and `nested`, on the response's field names.
+   */
+  query: string | Record<string, unknown>;
   /** Maximum number of results (1-100, default 1: the API returns one result when omitted). */
   limit?: number;
-  /** Number of results to skip for pagination (0-10000, default 0). */
+  /** Number of results to skip for pagination (0-10000, default 0). Not with `cursor`. */
   offset?: number;
+  /**
+   * The previous page's `next_cursor`, for deep paging and exports. A cursor belongs to one search on one
+   * dataset build; the last page has no `next_cursor`.
+   */
+  cursor?: string;
 }
 
 /** Parameters for `client.person.discover()` and `client.company.discover()`. */

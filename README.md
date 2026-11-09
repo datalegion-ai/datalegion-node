@@ -92,6 +92,30 @@ console.log(company.industry, '-', company.size);
 console.log('Employees:', company.legion_employee_count);
 ```
 
+### Query objects and cursors
+
+`query` can also be an Elasticsearch-style query object: `bool` (`must`, `should`, `filter`, `must_not`), `term`, `terms`, `match`, `match_phrase`, `range`, `exists`, `prefix`, `wildcard` and `nested`, on the response's own field names. Equality and prefixes ignore case.
+
+```typescript
+const results = await client.person.search({
+  query: { bool: { filter: [{ term: { company_name: 'google' } }, { match: { job_title: 'engineer' } }] } },
+  limit: 100,
+});
+```
+
+For deep paging and exports, send each page's `next_cursor` back as `cursor` (instead of `offset`). The last page has no `next_cursor`. A cursor belongs to one search on one dataset build, so after a new build, start again from the first page.
+
+```typescript
+let cursor: string | undefined;
+do {
+  const page = await client.person.search({ query: "SELECT * FROM people WHERE state = 'ohio'", limit: 100, cursor });
+  for (const match of page.matches) console.log(match.person.legion_id);
+  cursor = page.next_cursor ?? undefined;
+} while (cursor);
+```
+
+Company search takes the same `query` object and `cursor`.
+
 ## Company Search
 
 Search for companies using a SQL query.

@@ -363,6 +363,19 @@ describe('Request core (mocked fetch)', () => {
     expect(bodies[4]?.limit).toBe(25);
   });
 
+  test('search sends a query object and a cursor and reads next_cursor', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, { matches: [], next_cursor: 'abc', total: 0 }));
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    const query = { bool: { filter: [{ term: { job_title: 'engineer' } }] } };
+    const first = await client.person.search({ limit: 10, query });
+    await client.company.search({ cursor: first.next_cursor ?? undefined, query: { exists: { field: 'domain' } } });
+    const bodies = fetchMock.mock.calls.map(([, init]) => JSON.parse(String(init?.body)) as Record<string, unknown>);
+    expect(bodies[0]?.query).toEqual(query);
+    expect('cursor' in (bodies[0] ?? {})).toBe(false);
+    expect(bodies[1]?.cursor).toBe('abc');
+    expect(first.next_cursor).toBe('abc');
+  });
+
   test.each([
     [400, BadRequestError],
     [401, AuthenticationError],
