@@ -14,7 +14,7 @@
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D22-brightgreen.svg" alt="Node.js"></a>
 </p>
 
-TypeScript client for the [Data Legion API](https://www.datalegion.ai/docs). Provides typed access to person enrichment, company enrichment, search, discovery, and utility endpoints.
+TypeScript client for the [Data Legion API](https://www.datalegion.ai/docs). Provides typed access to the Person and Company Enrich, Bulk Enrich, Search and Discover endpoints, and the utility endpoints.
 
 - Zero external dependencies -- uses built-in `fetch` (Node.js 22+)
 - Full TypeScript type definitions for all request and response objects
@@ -50,20 +50,6 @@ console.log(person.full_name);
 console.log(person.job_title, 'at', person.company_name);
 ```
 
-Return multiple matches:
-
-```typescript
-const results = await client.person.enrich({
-  email: 'john@example.com',
-  multiple_results: true,
-  limit: 2,
-});
-
-for (const match of results.matches) {
-  console.log(match.person.full_name, '-', match.match_metadata?.match_confidence);
-}
-```
-
 ## Person Search
 
 Search for people using a SQL query. `limit` is optional: without it the API returns one result (max 100).
@@ -79,6 +65,30 @@ for (const match of results.matches) {
   console.log(match.person.full_name, '-', match.person.job_title);
 }
 ```
+
+### Query objects and cursors
+
+`query` can also be an Elasticsearch-style query object: `bool` (`must`, `should`, `filter`, `must_not`), `term`, `terms`, `match`, `match_phrase`, `range`, `exists`, `prefix`, `wildcard` and `nested`, on the response's own field names. Equality and prefixes ignore case.
+
+```typescript
+const results = await client.person.search({
+  query: { bool: { filter: [{ term: { company_name: 'google' } }, { match: { job_title: 'engineer' } }] } },
+  limit: 100,
+});
+```
+
+For deep paging and exports, send each page's `next_cursor` back as `cursor` (instead of `offset`). The last page has no `next_cursor`. A cursor belongs to one search on one dataset build, so after a new build, start again from the first page.
+
+```typescript
+let cursor: string | undefined;
+do {
+  const page = await client.person.search({ query: "SELECT * FROM people WHERE state = 'ohio'", limit: 100, cursor });
+  for (const match of page.matches) console.log(match.person.legion_id);
+  cursor = page.next_cursor ?? undefined;
+} while (cursor);
+```
+
+Company search takes the same `query` object and `cursor`.
 
 ## Person Discover
 
@@ -104,19 +114,6 @@ const company = await client.company.enrich({ domain: 'google.com' });
 console.log(company.name?.cleaned);
 console.log(company.industry, '-', company.size);
 console.log('Employees:', company.legion_employee_count);
-```
-
-Return multiple matches:
-
-```typescript
-const results = await client.company.enrich({
-  name: 'Google',
-  multiple_results: true,
-});
-
-for (const match of results.matches) {
-  console.log(match.company.name?.cleaned, '-', match.company.domain);
-}
 ```
 
 ## Company Search
@@ -237,13 +234,13 @@ console.log(client.rateLimitRemaining);   // remaining requests in current windo
 console.log(client.rateLimitReset);       // unix timestamp when window resets
 console.log(client.rateLimitPolicy);      // rate limit policy (e.g. "100/min")
 console.log(client.retryAfter);           // seconds to wait (on 429 responses)
-console.log(client.generatedQuery);       // SQL from discover endpoints
+console.log(client.generatedQuery);       // SQL from the Discover endpoints
 console.log(client.correlationId);        // echoed Correlation-ID
 console.log(client.totalCountStatus);     // search/discover: "exact" | "estimate" | "page"
 console.log(client.searchWarning);        // search/discover: why a filter was flagged, or null
 ```
 
-On `search`/`discover`, `totalCountStatus` tells you how the response `total` was derived: `"exact"` (true count), `"estimate"` (the query planner's row estimate, returned on broad queries where an exact count is too expensive — treat it as a magnitude), or `"page"` (count unavailable; `total` is just the returned page size).
+On `search`/`discover`, `totalCountStatus` tells you how the response `total` was derived: `"exact"` (true count), `"estimate"` (on broad queries where the exact count runs out of time: the matches counted by then, a lower bound, so read it as "at least"), or `"page"` (count unavailable; `total` is just the returned page size).
 
 `searchWarning` is set when a search flags one of its filters: for example an industry name that no stored value matches (the page comes back empty without being charged). It says what to change.
 
@@ -286,7 +283,7 @@ Each error exposes `statusCode`, `error`, `message`, and `details` properties. T
 
 ## Sandbox
 
-Pass `sandbox: true` to try the SDK without spending credits. Enrich, bulk enrich, search and discover then return sample records (Jane Sandbox, Sandbox Corp) with every field a real record has; the utilities, which are free anyway, call the real API.
+Pass `sandbox: true` to try the SDK without spending credits. Enrich, Bulk Enrich, Search and Discover then return sample records (Jane Sandbox, Sandbox Corp) with every field a real record has; the utilities, which are free anyway, call the real API.
 
 ```typescript
 const client = new DataLegion({ apiKey: 'legion_...', sandbox: true });
@@ -294,7 +291,7 @@ const person = await client.person.enrich({ email: 'anyone@example.com' });
 console.log(person.legion_id); // "sandbox_person_001"
 ```
 
-Sandbox discover answers only a few fixed example queries; the error lists them. If your API key is limited to certain endpoints, add the `/sandbox/...` ones.
+Sandbox Discover answers only a few fixed example queries; the error lists them. If your API key is limited to certain endpoints, add the `/sandbox/...` ones.
 
 ## Configuration
 

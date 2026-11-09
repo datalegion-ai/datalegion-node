@@ -142,7 +142,7 @@ export interface Certification {
 // Person Response
 // ---------------------------------------------------------------------------
 
-/** Complete person enrichment response. */
+/** Complete Person Enrich response. */
 export interface PersonResponse {
   legion_id: string;
   full_name: string | null;
@@ -296,7 +296,7 @@ export interface TimeBucketFloat {
   '12m': number | null;
 }
 
-/** Complete company enrichment response. */
+/** Complete Company Enrich response. */
 export interface CompanyResponse {
   legion_id: string;
 
@@ -367,26 +367,27 @@ export interface PersonMatch {
   match_metadata?: MatchMetadata;
 }
 
-/** Response wrapper for multiple person matches (enrich with `multiple_results`, search, discover). */
+/** Response wrapper for person matches (Search, Discover). */
 export interface PersonMatchesResponse {
   matches: PersonMatch[];
   total: number;
+  /** Send back as `cursor` for the next page (Search only): null on the last page, absent on Discover. */
+  next_cursor?: string | null;
 }
 
-/** A single result from a bulk person enrichment request. */
+/** A single result from a Person Bulk Enrich request. */
 export interface BulkPersonItemResult {
   matches?: PersonMatch[] | null;
-  total?: number | null;
   error?: string | null;
   metadata?: Record<string, string | number | boolean> | null;
 }
 
-/** Response from a bulk person enrichment request. */
+/** Response from a Person Bulk Enrich request. */
 export interface BulkPersonEnrichResponse {
   results: BulkPersonItemResult[];
 }
 
-/** One item's result from a dynamic bulk enrichment (phones/emails only). */
+/** One item's result from a Dynamic Bulk Enrich (phones/emails only). */
 export interface DynamicBulkPersonResult {
   metadata?: Record<string, string | number | boolean> | null;
   legion_id?: string | null;
@@ -397,7 +398,7 @@ export interface DynamicBulkPersonResult {
   error?: string | null;
 }
 
-/** Response from a dynamic bulk person enrichment request (phones/emails only). */
+/** Response from a Person Dynamic Bulk Enrich request (phones/emails only). */
 export interface DynamicBulkPersonEnrichResponse {
   results: DynamicBulkPersonResult[];
 }
@@ -408,21 +409,22 @@ export interface CompanyMatch {
   match_metadata?: MatchMetadata;
 }
 
-/** Response wrapper for multiple company matches. */
+/** Response wrapper for company matches (Search, Discover). */
 export interface CompanyMatchesResponse {
   matches: CompanyMatch[];
   total: number;
+  /** Send back as `cursor` for the next page (Search only): null on the last page, absent on Discover. */
+  next_cursor?: string | null;
 }
 
-/** A single result from a bulk company enrichment request. */
+/** A single result from a Company Bulk Enrich request. */
 export interface BulkCompanyItemResult {
   matches?: CompanyMatch[] | null;
-  total?: number | null;
   error?: string | null;
   metadata?: Record<string, string | number | boolean> | null;
 }
 
-/** Response from a bulk company enrichment request. */
+/** Response from a Company Bulk Enrich request. */
 export interface BulkCompanyEnrichResponse {
   results: BulkCompanyItemResult[];
 }
@@ -550,12 +552,8 @@ export interface HealthResponse {
 // Request Parameter Types
 // ---------------------------------------------------------------------------
 
-/** Shared response-option fields used across enrich endpoints. */
+/** Shared response-option fields used across the Enrich endpoints. */
 interface EnrichResponseOptions {
-  /** If true, return multiple matches sorted by confidence. */
-  multiple_results?: boolean;
-  /** Maximum number of results when `multiple_results` is true (1-10, default 2). */
-  limit?: number;
   /** Minimum match confidence level: `'high'`, `'moderate'`, or `'low'`. */
   min_confidence?: string;
   /** If true, format text fields in title case. */
@@ -575,7 +573,7 @@ interface EnrichResponseOptions {
   pretty_print?: boolean;
 }
 
-/** Shared response-option fields for search and discover endpoints. */
+/** Shared response-option fields for the Search and Discover endpoints. */
 interface SearchResponseOptions {
   /** If true, format text fields in title case. */
   titlecase?: boolean;
@@ -632,12 +630,20 @@ export interface CompanyEnrichParams extends EnrichResponseOptions {
 
 /** Parameters for `client.person.search()` and `client.company.search()`. */
 export interface SearchParams extends SearchResponseOptions {
-  /** SQL query to execute. */
-  query: string;
+  /**
+   * SQL query (a string), or an Elasticsearch-style query object: `bool`, `term`, `terms`, `match`,
+   * `match_phrase`, `range`, `exists`, `prefix`, `wildcard` and `nested`, on the response's field names.
+   */
+  query: string | Record<string, unknown>;
   /** Maximum number of results (1-100, default 1: the API returns one result when omitted). */
   limit?: number;
-  /** Number of results to skip for pagination (0-10000, default 0). */
+  /** Number of results to skip for pagination (0-10000, default 0). Not with `cursor`. */
   offset?: number;
+  /**
+   * The previous page's `next_cursor`, for deep paging and exports. A cursor belongs to one search on one
+   * dataset build; the last page's `next_cursor` is null.
+   */
+  cursor?: string;
 }
 
 /** Parameters for `client.person.discover()` and `client.company.discover()`. */
@@ -650,12 +656,8 @@ export interface DiscoverParams extends SearchResponseOptions {
   offset?: number;
 }
 
-/** Shared top-level defaults for bulk enrichment requests. */
+/** Shared top-level defaults for Bulk Enrich requests. */
 interface BulkEnrichDefaults {
-  /** If true, return multiple matches sorted by confidence. */
-  multiple_results?: boolean;
-  /** Maximum number of results when `multiple_results` is true (1-10, default 2). */
-  limit?: number;
   /** Minimum match confidence level: `'high'`, `'moderate'`, or `'low'`. */
   min_confidence?: string;
   /** If true, format text fields in title case. */
@@ -769,7 +771,7 @@ export interface ClientOptions {
   /** Default headers to include with every request. */
   defaultHeaders?: Record<string, string>;
   /**
-   * Sandbox mode: enrich, bulk enrich, search and discover return sample records with every field a
+   * Sandbox mode: Enrich, Bulk Enrich, Search and Discover return sample records with every field a
    * real record has, and use no credits. Utilities call the real API (they are free). Defaults to `false`.
    */
   sandbox?: boolean;
