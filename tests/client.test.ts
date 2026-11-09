@@ -339,7 +339,7 @@ describe('Dynamic bulk enrich (mocked)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Request core (mocked fetch — exercises _request without a live API)
+// Search by query object (live)
 // ---------------------------------------------------------------------------
 
 describe('Search by query object (live)', () => {
@@ -359,6 +359,10 @@ describe('Search by query object (live)', () => {
     expect(second.matches.map((m) => m.person.legion_id)).toEqual(byOffset.matches.map((m) => m.person.legion_id));
   });
 });
+
+// ---------------------------------------------------------------------------
+// Request core (mocked fetch — exercises _request without a live API)
+// ---------------------------------------------------------------------------
 
 describe('Request core (mocked fetch)', () => {
   afterEach(() => {

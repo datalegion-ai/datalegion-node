@@ -367,7 +367,7 @@ export interface PersonMatch {
 export interface PersonMatchesResponse {
   matches: PersonMatch[];
   total: number;
-  /** Send back as `cursor` for the next page (Search only); absent on the last page. */
+  /** Send back as `cursor` for the next page (Search only): null on the last page, absent on Discover. */
   next_cursor?: string | null;
 }
 
@@ -409,7 +409,7 @@ export interface CompanyMatch {
 export interface CompanyMatchesResponse {
   matches: CompanyMatch[];
   total: number;
-  /** Send back as `cursor` for the next page (Search only); absent on the last page. */
+  /** Send back as `cursor` for the next page (Search only): null on the last page, absent on Discover. */
   next_cursor?: string | null;
 }
 
@@ -636,7 +636,7 @@ export interface SearchParams extends SearchResponseOptions {
   offset?: number;
   /**
    * The previous page's `next_cursor`, for deep paging and exports. A cursor belongs to one search on one
-   * dataset build; the last page has no `next_cursor`.
+   * dataset build; the last page's `next_cursor` is null.
    */
   cursor?: string;
 }
