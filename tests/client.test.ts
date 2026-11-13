@@ -491,6 +491,31 @@ describe('Request core (mocked fetch)', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Person NPI (mocked: the fields are absent until the API serves NPI)
+// ---------------------------------------------------------------------------
+
+describe('Person NPI (mocked)', () => {
+  test('enrich posts npi and returns both NPI fields', async () => {
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    const person = { legion_id: 'p1', npi: '1679576722', npi_last_updated: '2026-07-13' };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const spy = vi.spyOn(client as any, '_request').mockResolvedValue({ matches: [{ person }], total: 1 });
+    const result = await client.person.enrich({ npi: '1679576722' });
+    expect(spy).toHaveBeenCalledWith('POST', '/person/enrich', { npi: '1679576722' });
+    expect(result.npi).toBe('1679576722');
+    expect(result.npi_last_updated).toBe('2026-07-13');
+  });
+
+  test('a response without NPI leaves the fields undefined', async () => {
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    vi.spyOn(client as any, '_request').mockResolvedValue({ matches: [{ person: { legion_id: 'p1' } }], total: 1 });
+    const result = await client.person.enrich({ email: 'jane@acme.com' });
+    expect(result.npi).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Error Handling
 // ---------------------------------------------------------------------------
 

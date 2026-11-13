@@ -195,6 +195,10 @@ export interface PersonResponse {
   linkedin_followers: number | null;
   linkedin_connections: number | null;
 
+  // NPI
+  npi?: string | null;
+  npi_last_updated?: string | null;
+
   // Narrative
   headline: CleanedRaw | null;
   summary: CleanedRaw | null;
@@ -590,6 +594,7 @@ export interface PersonEnrichParams extends EnrichResponseOptions {
   linkedin_id?: string;
   social_url?: string;
   legion_id?: string;
+  npi?: string;
 
   // Name
   full_name?: string;
