@@ -29,7 +29,7 @@ bun run test         # Run tests (requires DATALEGION_API_KEY)
 
 - TypeScript strict mode
 - Follow existing patterns in the codebase
-- Zero external dependencies — use built-in Node.js APIs
+- Zero external dependencies: use built-in Node.js APIs
 
 ## Reporting Issues
 
