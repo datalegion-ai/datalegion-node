@@ -491,11 +491,7 @@ describe('Request core (mocked fetch)', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Error Handling
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
-// Person NPI (mocked — the fields are absent until the API serves NPI)
+// Person NPI (mocked: the fields are absent until the API serves NPI)
 // ---------------------------------------------------------------------------
 
 describe('Person NPI (mocked)', () => {
@@ -518,6 +514,10 @@ describe('Person NPI (mocked)', () => {
     expect(result.npi).toBeUndefined();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Error Handling
+// ---------------------------------------------------------------------------
 
 describe('Error handling', () => {
   test('bad API key throws AuthenticationError', async () => {
