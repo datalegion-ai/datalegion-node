@@ -48,6 +48,10 @@ Look up a person by email, phone, social URL, name + location, or other identifi
 const person = await client.person.enrich({ email: 'john@example.com' });
 console.log(person.full_name);
 console.log(person.job_title, 'at', person.company_name);
+
+// Enrich a US healthcare provider by NPI (your plan must include NPI)
+const provider = await client.person.enrich({ npi: '1234567893' });
+console.log(provider.npi, provider.npi_last_updated);
 ```
 
 ## Person Search
