@@ -398,6 +398,20 @@ describe('Request core (mocked fetch)', () => {
     expect(first.next_cursor).toBe('abc');
   });
 
+  test('discover sends a cursor and reads next_cursor', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, {
+      generated_query: 'SELECT * FROM people', matches: [], next_cursor: 'abc', total: 0,
+    }));
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    const first = await client.person.discover({ limit: 10, query: 'nurses in Ohio' });
+    await client.person.discover({ cursor: first.next_cursor ?? undefined, query: 'nurses in Ohio' });
+    await client.company.discover({ cursor: 'xyz', query: 'banks in Ohio' });
+    const bodies = fetchMock.mock.calls.map(([, init]) => JSON.parse(String(init?.body)) as Record<string, unknown>);
+    expect('cursor' in (bodies[0] ?? {})).toBe(false);
+    expect([bodies[1]?.cursor, bodies[2]?.cursor]).toEqual(['abc', 'xyz']);
+    expect(first.next_cursor).toBe('abc');
+  });
+
   test.each([
     [400, BadRequestError],
     [401, AuthenticationError],
