@@ -105,6 +105,18 @@ for (const match of results.matches) {
 }
 ```
 
+For the next page, send `next_cursor` back as `cursor` with the same `query`: it reruns the same search, past 10,000 results too. Company discover pages the same way.
+
+```typescript
+const query = 'engineers in San Francisco who worked at Google';
+let cursor: string | undefined;
+do {
+  const page = await client.person.discover({ cursor, limit: 100, query });
+  for (const match of page.matches) console.log(match.person.legion_id);
+  cursor = page.next_cursor ?? undefined;
+} while (cursor);
+```
+
 ## Company Enrichment
 
 Look up a company by domain, name, LinkedIn ID, social URL, or ticker symbol.

@@ -371,7 +371,7 @@ export interface PersonMatch {
 export interface PersonMatchesResponse {
   matches: PersonMatch[];
   total: number;
-  /** Send back as `cursor` for the next page (Search only): null on the last page, absent on Discover. */
+  /** Send back as `cursor`, with the same query, for the next page: null on the last page. */
   next_cursor?: string | null;
 }
 
@@ -413,7 +413,7 @@ export interface CompanyMatch {
 export interface CompanyMatchesResponse {
   matches: CompanyMatch[];
   total: number;
-  /** Send back as `cursor` for the next page (Search only): null on the last page, absent on Discover. */
+  /** Send back as `cursor`, with the same query, for the next page: null on the last page. */
   next_cursor?: string | null;
 }
 
@@ -652,8 +652,16 @@ export interface DiscoverParams extends SearchResponseOptions {
   query: string;
   /** Maximum number of results (1-100, default 1: the API returns one result when omitted). */
   limit?: number;
-  /** Number of results to skip for pagination (0-10000, default 0). */
+  /**
+   * Number of results to skip (0-10000, default 0). Not with `cursor`. Each offset request reads the query again
+   * and may word the search a little differently: page with `cursor` instead.
+   */
   offset?: number;
+  /**
+   * The previous page's `next_cursor`, with the same `query`: the next page reruns the first page's search, past
+   * 10,000 results too. A cursor belongs to one query on one dataset build; the last page's `next_cursor` is null.
+   */
+  cursor?: string;
 }
 
 /** Shared top-level defaults for Bulk Enrich requests. */

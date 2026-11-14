@@ -10,6 +10,8 @@ const root = resolve(__dirname, '..');
 const tsc = join(root, 'node_modules', 'typescript', 'bin', 'tsc');
 const usage = `const client = new DataLegion({ apiKey: 'k' });
 const notFound: DataLegionError = new NotFoundError('not_found', 'No match');
+// Discover pages by cursor: the published types must take it
+export const nextPage = (cursor: string) => client.person.discover({ cursor, query: 'nurses in Ohio' });
 export const checks = [client.person, notFound.statusCode];
 `;
 
