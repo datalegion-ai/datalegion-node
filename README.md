@@ -56,27 +56,44 @@ console.log(provider.npi, provider.npi_last_updated);
 
 ## Person Search
 
-Search for people using a SQL query. `limit` is optional: without it the API returns one result (max 100).
+Search with exactly one of `filters`, `sql` or `es_query`. `limit` is optional: without it the API returns one result (max 100).
+
+`filters` uses the record's own field names, the ones every response carries. A value or a list (any of them), `{ gte, lte }` for a range, `{ exists: true }` for a filled field; every field given must hold.
 
 ```typescript
 const results = await client.person.search({
-  query: "SELECT * FROM people WHERE company_name ILIKE '%google%'",
+  filters: { job_title: ['vp of sales', 'head of sales'], state_code: 'TX' },
   limit: 10,
 });
 
-console.log(`Found ${results.total} people`);
+console.log(`Found ${results.total} people`, results.generated_query);
 for (const match of results.matches) {
   console.log(match.person.full_name, '-', match.person.job_title);
 }
 ```
 
-### Query objects and cursors
-
-`query` can also be an Elasticsearch-style query object: `bool` (`must`, `should`, `filter`, `must_not`), `term`, `terms`, `match`, `match_phrase`, `range`, `exists`, `prefix`, `wildcard` and `nested`, on the response's own field names. Equality and prefixes ignore case.
+Combine sets of fields with `{ and: [...] }`, `{ or: [...] }` or `{ not: {...} }`, and search the profile text with a Boolean `keywords` string (`AND`, `OR`, `NOT` in capitals, "quoted phrases", parentheses):
 
 ```typescript
-const results = await client.person.search({
-  query: { bool: { filter: [{ term: { company_name: 'google' } }, { match: { job_title: 'engineer' } }] } },
+await client.person.search({
+  filters: {
+    and: [
+      { keywords: '("data engineer" OR "analytics engineer") AND python NOT intern' },
+      { or: [{ state_code: 'TX' }, { city: 'boston' }] },
+    ],
+  },
+  limit: 10,
+});
+```
+
+### SQL, query objects and cursors
+
+`sql` takes a `SELECT * FROM people WHERE ...` statement (no `LIMIT` or `OFFSET`: use `limit` and `offset`). `es_query` takes an Elasticsearch-style query object: `bool` (`must`, `should`, `filter`, `must_not`), `term`, `terms`, `match`, `match_phrase`, `range`, `exists`, `prefix`, `wildcard` and `nested`, on the response's own field names. The older `query` parameter still works.
+
+```typescript
+await client.person.search({ sql: "SELECT * FROM people WHERE company_name ILIKE '%google%'", limit: 10 });
+await client.person.search({
+  es_query: { bool: { filter: [{ term: { company_name: 'google' } }, { match: { job_title: 'engineer' } }] } },
   limit: 100,
 });
 ```
@@ -86,13 +103,24 @@ For deep paging and exports, send each page's `next_cursor` back as `cursor` (in
 ```typescript
 let cursor: string | undefined;
 do {
-  const page = await client.person.search({ query: "SELECT * FROM people WHERE state = 'ohio'", limit: 100, cursor });
+  const page = await client.person.search({ filters: { state_code: 'OH' }, limit: 100, cursor });
   for (const match of page.matches) console.log(match.person.legion_id);
   cursor = page.next_cursor ?? undefined;
 } while (cursor);
 ```
 
-Company search takes the same `query` object and `cursor`.
+Company search takes the same inputs and `cursor`.
+
+### Count before you search
+
+`count` takes what `search` takes and returns how many records match, rounded, without returning any. It is free.
+
+```typescript
+const counted = await client.person.count({ filters: { job_title: 'nurse practitioner', state_code: 'TX' } });
+console.log(counted.total, counted.total_status); // 16000 'about'
+```
+
+`total_status` is `about` (the rounded count), `at_least` (counting ran out of time: a lower bound) or `under` (fewer than 10, possibly none). Counts are limited to 10 a minute and 200 an hour.
 
 ## Person Discover
 
@@ -134,17 +162,14 @@ console.log('Employees:', company.legion_employee_count);
 
 ## Company Search
 
-Search for companies using a SQL query.
+Search for companies with `filters`, `sql` or `es_query`, as person search does.
 
 ```typescript
 const results = await client.company.search({
-  query: "SELECT * FROM companies WHERE industry = 'software development'",
+  filters: { industry: 'software development', 'locations.city': 'austin', 'locations.primary': true },
   limit: 10,
 });
-
-for (const match of results.matches) {
-  console.log(match.company.name?.cleaned, '-', match.company.domain);
-}
+const counted = await client.company.count({ sql: "SELECT * FROM companies WHERE industry = 'banking'" });
 ```
 
 ## Company Discover
@@ -226,6 +251,15 @@ console.log(report.report_id, report.status);
 ```
 
 Company records use `client.utility.reportCompany()` with the same parameters.
+
+## Credits
+
+```typescript
+const balance = await client.credits.balance();
+for (const contract of balance.contracts) {
+  console.log(contract.endpoint, contract.credits_remaining); // '/person' 380 (null when unlimited)
+}
+```
 
 ## Health Check
 

@@ -1,6 +1,6 @@
 import { DataLegion } from './client.js';
 
-export { CompanyResource, DataLegion, PersonResource, UtilityResource } from './client.js';
+export { CompanyResource, CreditsResource, DataLegion, PersonResource, UtilityResource } from './client.js';
 export { AuthenticationError, BadRequestError, DataLegionError, InsufficientCreditsError, NotFoundError, PermissionDeniedError, RateLimitError, RequestTimeoutError, ServerError, ValidationError } from './error.js';
 export type {
   // Bulk response types
@@ -28,24 +28,29 @@ export type {
   CompanyMatchesResponse,
   CompanyResponse,
   CompanySocial,
+  // Search count and credits
+  CountParams,
+  CountResponse,
+  CreditContract,
+  CreditsResponse,
   DataIssueReportResponse,
   DiscoverParams,
   DynamicBulkEnrichItem,
+
   DynamicBulkEnrichParams,
   DynamicBulkPersonEnrichResponse,
   DynamicBulkPersonResult,
   Education,
-
   EducationOrganization,
+
   Email,
   EmailDomainCheck,
+
   EmailHashResponse,
   EmployeeCountByMonth,
-
   // Other response types
   ErrorResponse,
   Experience,
-
   ExperienceOrganization,
   FieldCleanResponse,
   // Utility response types
@@ -65,6 +70,7 @@ export type {
   ReportIssueLevel,
   ReportIssueType,
   ReportParams,
+  SearchInput,
   SearchParams,
   Skill,
   Social,
