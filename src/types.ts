@@ -373,6 +373,8 @@ export interface PersonMatchesResponse {
   total: number;
   /** Send back as `cursor`, with the same query, for the next page: null on the last page. */
   next_cursor?: string | null;
+  /** Search by `filters`: the query object they compiled to (send it as `es_query` to refine it). */
+  generated_query?: Record<string, unknown> | null;
 }
 
 /** A single result from a Person Bulk Enrich request. */
@@ -415,6 +417,8 @@ export interface CompanyMatchesResponse {
   total: number;
   /** Send back as `cursor`, with the same query, for the next page: null on the last page. */
   next_cursor?: string | null;
+  /** Search by `filters`: the query object they compiled to (send it as `es_query` to refine it). */
+  generated_query?: Record<string, unknown> | null;
 }
 
 /** A single result from a Company Bulk Enrich request. */
@@ -628,13 +632,61 @@ export interface CompanyEnrichParams extends EnrichResponseOptions {
   industry?: string;
 }
 
-/** Parameters for `client.person.search()` and `client.company.search()`. */
-export interface SearchParams extends SearchResponseOptions {
+/**
+ * What a search or count runs: send exactly one of `filters`, `sql` or `es_query` (two are refused, never merged).
+ */
+export interface SearchInput {
   /**
-   * SQL query (a string), or an Elasticsearch-style query object: `bool`, `term`, `terms`, `match`,
-   * `match_phrase`, `range`, `exists`, `prefix`, `wildcard` and `nested`, on the response's field names.
+   * Filters on the record's own field names (`job_title`, `state_code`, `locations.city`): a value or a list (any
+   * of them), `{ gte, lte }` for a range, `{ exists: true }`; every field given must hold. Combine sets with
+   * `{ and: [...] }`, `{ or: [...] }` or `{ not: {...} }`; `keywords` takes a Boolean search string.
    */
-  query: string | Record<string, unknown>;
+  filters?: Record<string, unknown>;
+  /** A `SELECT * FROM people|companies WHERE ...` statement (no LIMIT or OFFSET: use `limit` and `offset`). */
+  sql?: string;
+  /**
+   * An Elasticsearch-style query object: `bool`, `term`, `terms`, `match`, `match_phrase`, `range`, `exists`,
+   * `prefix`, `wildcard` and `nested`, on the response's field names.
+   */
+  es_query?: Record<string, unknown>;
+  /** @deprecated The older form of `sql` / `es_query`; still accepted. */
+  query?: string | Record<string, unknown>;
+}
+
+/** Parameters for `client.person.count()` and `client.company.count()`. */
+export type CountParams = Omit<SearchInput, 'query'>;
+
+/** How many records a search would match, rounded (search count). */
+export interface CountResponse {
+  /** Rounded: to the nearest 10 under 100, else to two significant figures. */
+  total: number;
+  /** `about` (the rounded count), `at_least` (counting ran out of time: a lower bound) or `under` (fewer than 10). */
+  total_status: 'about' | 'at_least' | 'under';
+  /** Set when the count was sent as `filters`: the query object they compiled to. */
+  generated_query?: Record<string, unknown> | null;
+}
+
+/** One contract's credits. */
+export interface CreditContract {
+  team_contract_id?: number;
+  /** What its credits pay for: `/person` or `/company` covers every endpoint of that entity. */
+  endpoint: string | null;
+  credits_purchased?: number;
+  credits_used?: number;
+  /** Null when unlimited. */
+  credits_remaining: number | null;
+  is_unlimited: boolean;
+  expiration_date?: string | null;
+}
+
+/** The team's credits, per contract (`client.credits.balance()`). */
+export interface CreditsResponse {
+  team?: { team_id?: number; team_name?: string; customer_id?: number };
+  contracts: CreditContract[];
+}
+
+/** Parameters for `client.person.search()` and `client.company.search()`. */
+export interface SearchParams extends SearchResponseOptions, SearchInput {
   /** Maximum number of results (1-100, default 1: the API returns one result when omitted). */
   limit?: number;
   /** Number of results to skip for pagination (0-10000, default 0). Not with `cursor`. */

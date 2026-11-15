@@ -16,6 +16,9 @@ const MADE_UP_PROFILE = 'https://www.linkedin.com/in/jane-exampleton-0001/';
 // Client Initialization
 // ---------------------------------------------------------------------------
 
+const jsonResponse = (status: number, body: unknown, headers: Record<string, string> = {}): Response =>
+  new Response(JSON.stringify(body), { headers: { 'content-type': 'application/json', ...headers }, status });
+
 describe('Client initialization', () => {
   test('throws DataLegionError when no API key is provided', () => {
     const saved = process.env.DATALEGION_API_KEY;
@@ -369,9 +372,6 @@ describe('Request core (mocked fetch)', () => {
     vi.restoreAllMocks();
   });
 
-  const jsonResponse = (status: number, body: unknown, headers: Record<string, string> = {}): Response =>
-    new Response(JSON.stringify(body), { headers: { 'content-type': 'application/json', ...headers }, status });
-
   test('search and discover leave limit to the API (one result) unless given', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, { matches: [], total: 0 }));
     const client = new DataLegion({ apiKey: 'legion_testkey' });
@@ -597,7 +597,7 @@ describe('Sandbox mode', () => {
 
   test('mirrors enrich, bulk enrich, search and discover for both entities', () => {
     expect([...SANDBOX_PATHS].sort()).toEqual(
-      ['person', 'company'].flatMap((e) => ['enrich', 'enrich/bulk', 'search', 'discover'].map((op) => `/${e}/${op}`)).sort(),
+      ['person', 'company'].flatMap((e) => ['enrich', 'enrich/bulk', 'search', 'search/count', 'discover'].map((op) => `/${e}/${op}`)).sort(),
     );
   });
 
@@ -605,5 +605,62 @@ describe('Sandbox mode', () => {
     const client = new DataLegion({ apiKey: API_KEY, sandbox: true });
     expect((await client.person.enrich({ email: 'anyone@example.org' })).legion_id).toMatch(/^sandbox_/);
     expect((await client.company.enrich({ domain: 'example.org' })).legion_id).toMatch(/^sandbox_/);
+  });
+});
+
+describe('Search inputs, count and credits (mocked fetch)', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const calls = (fetchMock: ReturnType<typeof vi.spyOn>) =>
+    fetchMock.mock.calls.map(([url, init]) => ({
+      body: init?.body ? (JSON.parse(String(init.body)) as Record<string, unknown>) : undefined,
+      method: init?.method,
+      path: new URL(String(url)).pathname,
+    }));
+
+  test('search sends each input by its own name', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, { matches: [], total: 0 }));
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    await client.person.search({ filters: { job_title: 'nurse', state_code: ['TX'] } });
+    await client.person.search({ sql: "SELECT * FROM people WHERE state = 'ohio'" });
+    await client.company.search({ es_query: { term: { domain: 'stripe.com' } } });
+    const bodies = calls(fetchMock).map((c) => c.body);
+    expect(bodies).toEqual([
+      { filters: { job_title: 'nurse', state_code: ['TX'] } },
+      { sql: "SELECT * FROM people WHERE state = 'ohio'" },
+      { es_query: { term: { domain: 'stripe.com' } } },
+    ]);
+  });
+
+  test('count posts to the count route and reads the total', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, { total: 1200, total_status: 'about' }));
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    const counted = await client.person.count({ filters: { job_title: 'nurse' } });
+    await client.company.count({ sql: "SELECT * FROM companies WHERE industry = 'banking'" });
+    expect(calls(fetchMock).map((c) => [c.method, c.path])).toEqual([
+      ['POST', '/person/search/count'],
+      ['POST', '/company/search/count'],
+    ]);
+    expect(counted).toEqual({ total: 1200, total_status: 'about' });
+  });
+
+  test('the sandbox routes the count', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, { total: 10, total_status: 'under' }));
+    const client = new DataLegion({ apiKey: 'legion_testkey', sandbox: true });
+    await client.person.count({ filters: { city: 'austin' } });
+    expect(calls(fetchMock)[0]?.path).toBe('/sandbox/person/search/count');
+  });
+
+  test('credits.balance reads the team credits', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, {
+      contracts: [{ credits_remaining: 380, endpoint: '/person', is_unlimited: false }],
+      team: { team_id: 1, team_name: 'Acme' },
+    }));
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    const balance = await client.credits.balance();
+    expect(calls(fetchMock).map((c) => [c.method, c.path])).toEqual([['GET', '/credits']]);
+    expect(balance.contracts[0]?.credits_remaining).toBe(380);
   });
 });

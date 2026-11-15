@@ -1,6 +1,6 @@
 import { AuthenticationError, BadRequestError, DataLegionError, type FixedStatusError, InsufficientCreditsError, NotFoundError, PermissionDeniedError, RateLimitError, RequestTimeoutError, ServerError, ValidationError } from './error.js';
 import { VERSION } from './version.js';
-import type { BulkCompanyEnrichResponse, BulkPersonEnrichResponse, CleanParams, ClientOptions, CompanyBulkEnrichParams, CompanyEnrichParams, CompanyMatchesResponse, CompanyResponse, DataIssueReportResponse, DiscoverParams, DynamicBulkEnrichParams, DynamicBulkPersonEnrichResponse, EmailHashResponse, ErrorResponse, FieldCleanResponse, HashEmailParams, HealthResponse, PersonBulkEnrichParams, PersonEnrichParams, PersonMatchesResponse, PersonResponse, ReportParams, SearchParams, ValidateParams, ValidationResponse } from './types.js';
+import type { BulkCompanyEnrichResponse, BulkPersonEnrichResponse, CleanParams, ClientOptions, CompanyBulkEnrichParams, CompanyEnrichParams, CompanyMatchesResponse, CompanyResponse, CountParams, CountResponse, CreditsResponse, DataIssueReportResponse, DiscoverParams, DynamicBulkEnrichParams, DynamicBulkPersonEnrichResponse, EmailHashResponse, ErrorResponse, FieldCleanResponse, HashEmailParams, HealthResponse, PersonBulkEnrichParams, PersonEnrichParams, PersonMatchesResponse, PersonResponse, ReportParams, SearchParams, ValidateParams, ValidationResponse } from './types.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -12,7 +12,7 @@ const DEFAULT_TIMEOUT = 60_000;
 // Endpoints the API mirrors under /sandbox/: sample records (Jane Sandbox, Sandbox Corp), no
 // credits. Everything else (utilities, reports, health, dynamic bulk) has no sandbox.
 export const SANDBOX_PATHS: ReadonlySet<string> = new Set(
-  ['person', 'company'].flatMap((entity) => ['enrich', 'enrich/bulk', 'search', 'discover'].map((op) => `/${entity}/${op}`)),
+  ['person', 'company'].flatMap((entity) => ['enrich', 'enrich/bulk', 'search', 'search/count', 'discover'].map((op) => `/${entity}/${op}`)),
 );
 
 // The error class for each status with its own class; any other 5xx is a ServerError and
@@ -92,9 +92,17 @@ export class PersonResource {
     return first.person;
   }
 
-  /** Search for people using a SQL query. */
+  /** Search for people: exactly one of `filters` (the record's own field names), `sql` or `es_query`. */
   async search(params: SearchParams): Promise<PersonMatchesResponse> {
     return this._client._request<PersonMatchesResponse>('POST', '/person/search', params);
+  }
+
+  /**
+   * Count the people a search would match, without returning records. Free. Takes what `search` takes (exactly
+   * one of `filters`, `sql` or `es_query`); `total` is rounded and `total_status` says how to read it.
+   */
+  async count(params: CountParams): Promise<CountResponse> {
+    return this._client._request<CountResponse>('POST', '/person/search/count', params);
   }
 
   /** Discover people using a natural language query. */
@@ -148,9 +156,17 @@ export class CompanyResource {
     return first.company;
   }
 
-  /** Search for companies using a SQL query. */
+  /** Search for companies: exactly one of `filters` (the record's own field names), `sql` or `es_query`. */
   async search(params: SearchParams): Promise<CompanyMatchesResponse> {
     return this._client._request<CompanyMatchesResponse>('POST', '/company/search', params);
+  }
+
+  /**
+   * Count the companies a search would match, without returning records. Free. Takes what `search` takes (exactly
+   * one of `filters`, `sql` or `es_query`); `total` is rounded and `total_status` says how to read it.
+   */
+  async count(params: CountParams): Promise<CountResponse> {
+    return this._client._request<CountResponse>('POST', '/company/search/count', params);
   }
 
   /** Discover companies using a natural language query. */
@@ -163,6 +179,22 @@ export class CompanyResource {
   /** Enrich multiple companies in a single request (1-50 items). */
   async bulkEnrich(params: CompanyBulkEnrichParams): Promise<BulkCompanyEnrichResponse> {
     return this._client._request<BulkCompanyEnrichResponse>('POST', '/company/enrich/bulk', params);
+  }
+}
+
+/** The team's credits. */
+export class CreditsResource {
+  /** @internal */
+  private _client: DataLegion;
+
+  /** @internal */
+  constructor(client: DataLegion) {
+    this._client = client;
+  }
+
+  /** The team's remaining credits, per contract. Free. */
+  async balance(): Promise<CreditsResponse> {
+    return this._client._request<CreditsResponse>('GET', '/credits');
   }
 }
 
@@ -216,6 +248,9 @@ export class DataLegion {
 
   /** Data cleaning, hashing, validation, and data-issue reporting utilities. */
   readonly utility: UtilityResource;
+
+  /** The team's credits. */
+  readonly credits: CreditsResource;
 
   /** `Request-ID` header from the most recent API response. */
   requestId: string | null = null;
@@ -309,6 +344,7 @@ export class DataLegion {
     this.company = new CompanyResource(this);
     this.person = new PersonResource(this);
     this.utility = new UtilityResource(this);
+    this.credits = new CreditsResource(this);
   }
 
   /**
