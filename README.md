@@ -66,7 +66,7 @@ const results = await client.person.search({
   limit: 10,
 });
 
-console.log(`Found ${results.total} people`, results.generated_query);
+console.log(`Found ${results.total} people`);
 for (const match of results.matches) {
   console.log(match.person.full_name, '-', match.person.job_title);
 }
@@ -284,7 +284,6 @@ console.log(client.rateLimitRemaining);   // remaining requests in current windo
 console.log(client.rateLimitReset);       // unix timestamp when window resets
 console.log(client.rateLimitPolicy);      // rate limit policy (e.g. "100/min")
 console.log(client.retryAfter);           // seconds to wait (on 429 responses)
-console.log(client.generatedQuery);       // SQL from the Discover endpoints
 console.log(client.correlationId);        // echoed Correlation-ID
 console.log(client.totalCountStatus);     // search/discover: "exact" | "estimate" | "page"
 console.log(client.searchWarning);        // search/discover: why a filter was flagged, or null

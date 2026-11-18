@@ -373,8 +373,6 @@ export interface PersonMatchesResponse {
   total: number;
   /** Send back as `cursor`, with the same query, for the next page: null on the last page. */
   next_cursor?: string | null;
-  /** Search by `filters`: the query object they compiled to (send it as `es_query` to refine it). */
-  generated_query?: Record<string, unknown> | null;
 }
 
 /** A single result from a Person Bulk Enrich request. */
@@ -417,8 +415,6 @@ export interface CompanyMatchesResponse {
   total: number;
   /** Send back as `cursor`, with the same query, for the next page: null on the last page. */
   next_cursor?: string | null;
-  /** Search by `filters`: the query object they compiled to (send it as `es_query` to refine it). */
-  generated_query?: Record<string, unknown> | null;
 }
 
 /** A single result from a Company Bulk Enrich request. */
@@ -662,8 +658,6 @@ export interface CountResponse {
   total: number;
   /** `about` (the rounded count), `at_least` (counting ran out of time: a lower bound) or `under` (fewer than 10). */
   total_status: 'about' | 'at_least' | 'under';
-  /** Set when the count was sent as `filters`: the query object they compiled to. */
-  generated_query?: Record<string, unknown> | null;
 }
 
 /** One contract's credits. */

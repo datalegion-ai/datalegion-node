@@ -398,9 +398,16 @@ describe('Request core (mocked fetch)', () => {
     expect(first.next_cursor).toBe('abc');
   });
 
+  test('the client keeps no generatedQuery', async () => {
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, { matches: [], total: 0 }));
+    const client = new DataLegion({ apiKey: 'legion_testkey' });
+    await client.person.discover({ query: 'nurses in Ohio' });
+    expect('generatedQuery' in client).toBe(false);
+  });
+
   test('discover sends a cursor and reads next_cursor', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async () => jsonResponse(200, {
-      generated_query: 'SELECT * FROM people', matches: [], next_cursor: 'abc', total: 0,
+      matches: [], next_cursor: 'abc', total: 0,
     }));
     const client = new DataLegion({ apiKey: 'legion_testkey' });
     const first = await client.person.discover({ limit: 10, query: 'nurses in Ohio' });
