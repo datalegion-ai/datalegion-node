@@ -72,6 +72,8 @@ for (const match of results.matches) {
 }
 ```
 
+Location fields (`city`, `state`, `state_code`) come with contact data; on a plan without it, a filter on them is refused with a 400.
+
 Combine sets of fields with `{ and: [...] }`, `{ or: [...] }` or `{ not: {...} }`, and search the profile text with a Boolean `keywords` string (`AND`, `OR`, `NOT` in capitals, "quoted phrases", parentheses):
 
 ```typescript
@@ -116,7 +118,9 @@ Company search takes the same inputs and `cursor`.
 `count` takes what `search` takes and returns how many records match, rounded, without returning any. It is free and works with zero credits left: it needs an active plan that includes search, not a balance.
 
 ```typescript
-const counted = await client.person.count({ filters: { job_title: 'nurse practitioner', state_code: 'TX' } });
+const counted = await client.person.count({
+  filters: { job_title: 'nurse practitioner', company_industry: 'hospitals and health care' },
+});
 console.log(counted.total, counted.total_status); // 16000 'about'
 ```
 
