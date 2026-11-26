@@ -16,3 +16,5 @@ src/*.js.map
 
 # npm pack output
 *.tgz
+
+__pycache__/

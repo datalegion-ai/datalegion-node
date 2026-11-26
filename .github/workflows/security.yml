@@ -17,7 +17,7 @@ concurrency:
 jobs:
 
   security:
-    name: Security Scan
+    name: Security scan
     if: github.event.pull_request.draft != true
     runs-on: ubuntu-26.04
     timeout-minutes: 5
@@ -42,7 +42,7 @@ jobs:
             --lockfile=bun.lock
 
   actionlint:
-    name: actionlint
+    name: Lint workflows
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
@@ -67,3 +67,5 @@ jobs:
           tar -xzf "/tmp/$f" -C /tmp actionlint
           command -v shellcheck >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck; }
           /tmp/actionlint -color
+      - name: Check workflow names use sentence case
+        run: python3 .github/scripts/check_workflow_names.py

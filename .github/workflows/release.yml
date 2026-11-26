@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   lint:
-    name: Lint & Build
+    name: Lint & build
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
@@ -150,14 +150,14 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   github-release:
-    name: Create GitHub Release
+    name: Create GitHub release
     needs: [publish-npm, publish-gpr]
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
       contents: write
     steps:
-      - name: Create Release
+      - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes --verify-tag
