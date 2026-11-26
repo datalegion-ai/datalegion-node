@@ -142,7 +142,7 @@ export interface Certification {
 // Person Response
 // ---------------------------------------------------------------------------
 
-/** Complete Person Enrich response. */
+/** Complete Person Enrichment response. */
 export interface PersonResponse {
   legion_id: string;
   full_name: string | null;
@@ -296,7 +296,7 @@ export interface TimeBucketFloat {
   '12m': number | null;
 }
 
-/** Complete Company Enrich response. */
+/** Complete Company Enrichment response. */
 export interface CompanyResponse {
   legion_id: string;
 
@@ -375,19 +375,19 @@ export interface PersonMatchesResponse {
   next_cursor?: string | null;
 }
 
-/** A single result from a Person Bulk Enrich request. */
+/** A single result from a Person Bulk Enrichment request. */
 export interface BulkPersonItemResult {
   matches?: PersonMatch[] | null;
   error?: string | null;
   metadata?: Record<string, string | number | boolean> | null;
 }
 
-/** Response from a Person Bulk Enrich request. */
+/** Response from a Person Bulk Enrichment request. */
 export interface BulkPersonEnrichResponse {
   results: BulkPersonItemResult[];
 }
 
-/** One item's result from a Dynamic Bulk Enrich (phones/emails only). */
+/** One item's result from a Dynamic Bulk Enrichment (phones/emails only). */
 export interface DynamicBulkPersonResult {
   metadata?: Record<string, string | number | boolean> | null;
   legion_id?: string | null;
@@ -398,7 +398,7 @@ export interface DynamicBulkPersonResult {
   error?: string | null;
 }
 
-/** Response from a Person Dynamic Bulk Enrich request (phones/emails only). */
+/** Response from a Person Dynamic Bulk Enrichment request (phones/emails only). */
 export interface DynamicBulkPersonEnrichResponse {
   results: DynamicBulkPersonResult[];
 }
@@ -417,14 +417,14 @@ export interface CompanyMatchesResponse {
   next_cursor?: string | null;
 }
 
-/** A single result from a Company Bulk Enrich request. */
+/** A single result from a Company Bulk Enrichment request. */
 export interface BulkCompanyItemResult {
   matches?: CompanyMatch[] | null;
   error?: string | null;
   metadata?: Record<string, string | number | boolean> | null;
 }
 
-/** Response from a Company Bulk Enrich request. */
+/** Response from a Company Bulk Enrichment request. */
 export interface BulkCompanyEnrichResponse {
   results: BulkCompanyItemResult[];
 }
@@ -552,7 +552,7 @@ export interface HealthResponse {
 // Request Parameter Types
 // ---------------------------------------------------------------------------
 
-/** Shared response-option fields used across the Enrich endpoints. */
+/** Shared response-option fields used across the Enrichment endpoints. */
 interface EnrichResponseOptions {
   /** Minimum match confidence level: `'high'`, `'moderate'`, or `'low'`. */
   min_confidence?: string;
@@ -710,7 +710,7 @@ export interface DiscoverParams extends SearchResponseOptions {
   cursor?: string;
 }
 
-/** Shared top-level defaults for Bulk Enrich requests. */
+/** Shared top-level defaults for Bulk Enrichment requests. */
 interface BulkEnrichDefaults {
   /** Minimum match confidence level: `'high'`, `'moderate'`, or `'low'`. */
   min_confidence?: string;
