@@ -825,7 +825,7 @@ export interface ClientOptions {
   /** Default headers to include with every request. */
   defaultHeaders?: Record<string, string>;
   /**
-   * Sandbox mode: Enrich, Bulk Enrich, Search and Discover return sample records with every field a
+   * Sandbox mode: Enrichment, Bulk Enrichment, Search and Discover return sample records with every field a
    * real record has, and use no credits. Utilities call the real API (they are free). Defaults to `false`.
    */
   sandbox?: boolean;
