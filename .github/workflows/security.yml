@@ -93,3 +93,4 @@ jobs:
         with:
           version: "1.33.1"
           advanced-security: "false"
+          strict-collection: "true"
